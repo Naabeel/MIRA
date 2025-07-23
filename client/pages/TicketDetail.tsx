@@ -426,7 +426,7 @@ export default function TicketDetail() {
                             <div className="flex justify-between">
                               <span className="text-mira-600">Created:</span>
                               <span className="text-mira-700">
-                                {formatDate(ticket.createdAt)}
+                                {formatDate(ticketInfo.createdAt)}
                               </span>
                             </div>
                             <div className="flex justify-between">
@@ -434,14 +434,14 @@ export default function TicketDetail() {
                                 Last Updated:
                               </span>
                               <span className="text-mira-700">
-                                {formatDate(ticket.updatedAt)}
+                                {formatDate(ticketInfo.updatedAt)}
                               </span>
                             </div>
-                            {ticket.resolvedAt && (
+                            {ticketInfo.resolvedAt && (
                               <div className="flex justify-between">
                                 <span className="text-mira-600">Resolved:</span>
                                 <span className="text-mira-700">
-                                  {formatDate(ticket.resolvedAt)}
+                                  {formatDate(ticketInfo.resolvedAt)}
                                 </span>
                               </div>
                             )}
