@@ -92,7 +92,7 @@ export default function Dashboard() {
       .slice(0, 5);
   };
 
-  return (
+    return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -182,7 +182,7 @@ export default function Dashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl text-mira-900">
-                  Ticket Categories
+                  Your Ticket Queue
                 </CardTitle>
                 <p className="text-sm text-mira-600">
                   Click on a category to view detailed tickets
