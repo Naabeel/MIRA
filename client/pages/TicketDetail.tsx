@@ -133,26 +133,26 @@ export default function TicketDetail() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-mira-900 mb-2">
-                {ticket.subject}
+                {ticketInfo.subject}
               </h1>
               <div className="flex items-center gap-4">
                 <Badge
-                  className={cn("text-xs", priorityColors[ticket.priority])}
+                  className={cn("text-xs", priorityColors[ticketInfo.priority])}
                 >
-                  {ticket.priority}
+                  {ticketInfo.priority}
                 </Badge>
-                <Badge className={cn("text-xs", statusColors[ticket.status])}>
-                  {ticket.status.replace("_", " ")}
+                <Badge className={cn("text-xs", statusColors[ticketInfo.status])}>
+                  {ticketInfo.status.replace("_", " ")}
                 </Badge>
                 <span className="text-sm text-mira-600">
-                  Created {formatDate(ticket.createdAt)}
+                  Created {formatDate(ticketInfo.createdAt)}
                 </span>
               </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-mira-600">Ticket ID</div>
               <div className="font-mono text-sm bg-mira-100 px-3 py-1 rounded">
-                {ticket.id}
+                {ticketInfo.id}
               </div>
             </div>
           </div>
