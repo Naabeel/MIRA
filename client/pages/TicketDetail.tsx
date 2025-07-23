@@ -221,9 +221,9 @@ export default function TicketDetail() {
                     <CardContent>
                       <div className="flex items-start gap-4">
                         <Avatar className="h-16 w-16">
-                          <AvatarImage src={networkMember.avatar} />
+                          <AvatarImage src={memberInfo.avatar} />
                           <AvatarFallback className="bg-mira-blue text-white text-lg">
-                            {networkMember.name
+                            {memberInfo.name
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
@@ -231,34 +231,34 @@ export default function TicketDetail() {
                         </Avatar>
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-mira-900">
-                            {networkMember.name}
+                            {memberInfo.name}
                           </h3>
-                          <p className="text-mira-600">{networkMember.role}</p>
+                          <p className="text-mira-600">{memberInfo.role}</p>
                           <div className="mt-3 space-y-2">
                             <div className="flex items-center gap-2 text-sm">
                               <Mail className="h-4 w-4 text-mira-500" />
                               <span className="text-mira-700">
-                                {networkMember.email}
+                                {memberInfo.email}
                               </span>
                             </div>
-                            {networkMember.phone && (
+                            {memberInfo.phone && (
                               <div className="flex items-center gap-2 text-sm">
                                 <Phone className="h-4 w-4 text-mira-500" />
                                 <span className="text-mira-700">
-                                  {networkMember.phone}
+                                  {memberInfo.phone}
                                 </span>
                               </div>
                             )}
                             <div className="flex items-center gap-2 text-sm">
                               <MapPin className="h-4 w-4 text-mira-500" />
                               <span className="text-mira-700">
-                                {networkMember.location}
+                                {memberInfo.location}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                               <Building className="h-4 w-4 text-mira-500" />
                               <span className="text-mira-700">
-                                {networkMember.department}
+                                {memberInfo.department}
                               </span>
                             </div>
                           </div>
