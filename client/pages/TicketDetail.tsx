@@ -412,7 +412,7 @@ export default function TicketDetail() {
                             Description
                           </h4>
                           <p className="text-sm text-mira-700 leading-relaxed">
-                            {ticket.description}
+                            {ticketInfo.description}
                           </p>
                         </div>
 
