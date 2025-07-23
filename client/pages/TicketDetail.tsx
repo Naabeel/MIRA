@@ -834,44 +834,44 @@ export default function TicketDetail() {
                       </h4>
                       <div className="border border-mira-200 rounded-lg p-4">
                         <h5 className="font-medium text-mira-900 mb-2">
-                          {ticket.subject}
+                          {ticketInfo.subject}
                         </h5>
-                        <p className="text-mira-700 mb-4">{ticket.description}</p>
+                        <p className="text-mira-700 mb-4">{ticketInfo.description}</p>
 
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
                             <span className="text-mira-600">Created:</span>
                             <span className="text-mira-700 ml-2">
-                              {formatDate(ticket.createdAt)}
+                              {formatDate(ticketInfo.createdAt)}
                             </span>
                           </div>
                           <div>
                             <span className="text-mira-600">Last Updated:</span>
                             <span className="text-mira-700 ml-2">
-                              {formatDate(ticket.updatedAt)}
+                              {formatDate(ticketInfo.updatedAt)}
                             </span>
                           </div>
                           <div>
                             <span className="text-mira-600">Requester:</span>
                             <span className="text-mira-700 ml-2">
-                              {networkMember.name}
+                              {memberInfo.name}
                             </span>
                           </div>
                           <div>
                             <span className="text-mira-600">Assignee ID:</span>
                             <span className="text-mira-700 ml-2">
-                              {ticket.assigneeId}
+                              {ticketInfo.assigneeId}
                             </span>
                           </div>
                         </div>
 
-                        {ticket.attachments.length > 0 && (
+                        {ticketInfo.attachments.length > 0 && (
                           <div className="mt-4">
                             <h6 className="text-sm font-medium text-mira-600 mb-2">
                               Attachments
                             </h6>
                             <div className="flex flex-wrap gap-2">
-                              {ticket.attachments.map((attachment) => (
+                              {ticketInfo.attachments.map((attachment) => (
                                 <Badge key={attachment} variant="outline" className="text-xs">
                                   {attachment}
                                 </Badge>
