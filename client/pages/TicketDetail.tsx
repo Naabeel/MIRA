@@ -448,7 +448,7 @@ export default function TicketDetail() {
                           </div>
                         </div>
 
-                        {ticket.tags.length > 0 && (
+                        {ticketInfo.tags.length > 0 && (
                           <>
                             <Separator />
                             <div>
@@ -456,7 +456,7 @@ export default function TicketDetail() {
                                 Tags
                               </h4>
                               <div className="flex flex-wrap gap-2">
-                                {ticket.tags.map((tag) => (
+                                {ticketInfo.tags.map((tag) => (
                                   <Badge
                                     key={tag}
                                     variant="secondary"
@@ -470,7 +470,7 @@ export default function TicketDetail() {
                           </>
                         )}
 
-                        {ticket.comments.length > 0 && (
+                        {ticketInfo.comments.length > 0 && (
                           <>
                             <Separator />
                             <div>
@@ -478,7 +478,7 @@ export default function TicketDetail() {
                                 Latest Comments
                               </h4>
                               <div className="space-y-2">
-                                {ticket.comments.slice(-2).map((comment) => (
+                                {ticketInfo.comments.slice(-2).map((comment) => (
                                   <div
                                     key={comment.id}
                                     className="bg-mira-50 p-3 rounded-lg"
