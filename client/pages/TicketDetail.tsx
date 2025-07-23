@@ -88,8 +88,8 @@ export default function TicketDetail() {
     knowledgeBaseData: mockTicketDetailData.knowledgeBaseData,
   };
   const {
-    ticket,
-    networkMember,
+    ticket: ticketInfo,
+    networkMember: memberInfo,
     prismData,
     streamlinerData,
     revelioData,
