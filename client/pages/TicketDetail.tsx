@@ -806,16 +806,16 @@ export default function TicketDetail() {
                         <h4 className="text-sm font-medium text-mira-600">
                           Ticket Status
                         </h4>
-                        <Badge className={cn("mt-2", statusColors[ticket.status])}>
-                          {ticket.status.replace("_", " ")}
+                        <Badge className={cn("mt-2", statusColors[ticketInfo.status])}>
+                          {ticketInfo.status.replace("_", " ")}
                         </Badge>
                       </div>
                       <div className="bg-mira-50 p-4 rounded-lg">
                         <h4 className="text-sm font-medium text-mira-600">
                           Priority Level
                         </h4>
-                        <Badge className={cn("mt-2", priorityColors[ticket.priority])}>
-                          {ticket.priority}
+                        <Badge className={cn("mt-2", priorityColors[ticketInfo.priority])}>
+                          {ticketInfo.priority}
                         </Badge>
                       </div>
                       <div className="bg-mira-50 p-4 rounded-lg">
@@ -823,7 +823,7 @@ export default function TicketDetail() {
                           Category
                         </h4>
                         <p className="text-sm text-mira-700 mt-2 capitalize">
-                          {ticket.category.replace("_", " ")}
+                          {ticketInfo.category.replace("_", " ")}
                         </p>
                       </div>
                     </div>
