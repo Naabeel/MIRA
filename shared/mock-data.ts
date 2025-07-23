@@ -216,7 +216,8 @@ export const mockTickets: ZendeskTicket[] = [
   {
     id: "zd_002",
     subject: "Rate increase negotiation for Q2 projects",
-    description: "Requesting rate adjustment based on experience and market conditions",
+    description:
+      "Requesting rate adjustment based on experience and market conditions",
     status: "in_progress",
     priority: "high",
     category: "rate_negotiation",
@@ -313,7 +314,8 @@ export const mockTickets: ZendeskTicket[] = [
   {
     id: "zd_004",
     subject: "Payment delay for December invoices",
-    description: "December invoice payment is overdue, requesting status update",
+    description:
+      "December invoice payment is overdue, requesting status update",
     status: "open",
     priority: "high",
     category: "payments",
@@ -357,7 +359,8 @@ export const mockTickets: ZendeskTicket[] = [
   {
     id: "zd_005",
     subject: "ID verification documentation required",
-    description: "Additional identity verification documents needed for compliance",
+    description:
+      "Additional identity verification documents needed for compliance",
     status: "pending",
     priority: "medium",
     category: "idnc",

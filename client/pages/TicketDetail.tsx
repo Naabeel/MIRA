@@ -60,15 +60,21 @@ export default function TicketDetail() {
   const [activeDataSource, setActiveDataSource] = useState("all");
 
   // Find the specific ticket based on ticketId
-  const ticket = mockTickets.find(t => t.id === ticketId);
-  const networkMember = mockNetworkMembers.find(m => m.id === ticket?.networkMemberId);
+  const ticket = mockTickets.find((t) => t.id === ticketId);
+  const networkMember = mockNetworkMembers.find(
+    (m) => m.id === ticket?.networkMemberId,
+  );
 
   if (!ticket || !networkMember) {
     return (
       <div className="min-h-screen bg-white p-6 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-mira-900 mb-2">Ticket Not Found</h1>
-          <p className="text-mira-600">The requested ticket could not be found.</p>
+          <h1 className="text-2xl font-bold text-mira-900 mb-2">
+            Ticket Not Found
+          </h1>
+          <p className="text-mira-600">
+            The requested ticket could not be found.
+          </p>
           <Button onClick={() => navigate("/")} className="mt-4">
             Return to Dashboard
           </Button>
@@ -114,7 +120,7 @@ export default function TicketDetail() {
     }).format(amount);
   };
 
-    return (
+  return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -141,7 +147,9 @@ export default function TicketDetail() {
                 >
                   {ticketInfo.priority}
                 </Badge>
-                <Badge className={cn("text-xs", statusColors[ticketInfo.status])}>
+                <Badge
+                  className={cn("text-xs", statusColors[ticketInfo.status])}
+                >
                   {ticketInfo.status.replace("_", " ")}
                 </Badge>
                 <span className="text-sm text-mira-600">
@@ -478,19 +486,21 @@ export default function TicketDetail() {
                                 Latest Comments
                               </h4>
                               <div className="space-y-2">
-                                {ticketInfo.comments.slice(-2).map((comment) => (
-                                  <div
-                                    key={comment.id}
-                                    className="bg-mira-50 p-3 rounded-lg"
-                                  >
-                                    <p className="text-sm text-mira-700">
-                                      {comment.body}
-                                    </p>
-                                    <p className="text-xs text-mira-500 mt-1">
-                                      {formatDate(comment.createdAt)}
-                                    </p>
-                                  </div>
-                                ))}
+                                {ticketInfo.comments
+                                  .slice(-2)
+                                  .map((comment) => (
+                                    <div
+                                      key={comment.id}
+                                      className="bg-mira-50 p-3 rounded-lg"
+                                    >
+                                      <p className="text-sm text-mira-700">
+                                        {comment.body}
+                                      </p>
+                                      <p className="text-xs text-mira-500 mt-1">
+                                        {formatDate(comment.createdAt)}
+                                      </p>
+                                    </div>
+                                  ))}
                               </div>
                             </div>
                           </>
@@ -584,7 +594,7 @@ export default function TicketDetail() {
               </Card>
             </TabsContent>
 
-                        <TabsContent value="streamliner">
+            <TabsContent value="streamliner">
               <Card>
                 <CardHeader>
                   <CardTitle>STREAMLINER - Project History</CardTitle>
@@ -648,12 +658,18 @@ export default function TicketDetail() {
                                 </span>
                                 <span className="text-sm text-mira-600">
                                   Duration: {project.startDate}
-                                  {project.endDate ? ` - ${project.endDate}` : " - Present"}
+                                  {project.endDate
+                                    ? ` - ${project.endDate}`
+                                    : " - Present"}
                                 </span>
                               </div>
                               <div className="flex flex-wrap gap-2 mt-2">
                                 {project.tags.map((tag) => (
-                                  <Badge key={tag} variant="secondary" className="text-xs">
+                                  <Badge
+                                    key={tag}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
                                     {tag}
                                   </Badge>
                                 ))}
@@ -673,7 +689,10 @@ export default function TicketDetail() {
                                 {project.status}
                               </Badge>
                               <p className="text-lg font-semibold text-mira-900">
-                                {formatCurrency(project.value, project.currency)}
+                                {formatCurrency(
+                                  project.value,
+                                  project.currency,
+                                )}
                               </p>
                             </div>
                           </div>
@@ -688,7 +707,9 @@ export default function TicketDetail() {
             <TabsContent value="revelio">
               <Card>
                 <CardHeader>
-                  <CardTitle>REVELIO - Social & Professional Intelligence</CardTitle>
+                  <CardTitle>
+                    REVELIO - Social & Professional Intelligence
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -730,7 +751,11 @@ export default function TicketDetail() {
                           </label>
                           <div className="flex flex-wrap gap-2 mt-1">
                             {revelioData.linkedInProfile.skills.map((skill) => (
-                              <Badge key={skill} variant="secondary" className="text-xs">
+                              <Badge
+                                key={skill}
+                                variant="secondary"
+                                className="text-xs"
+                              >
                                 {skill}
                               </Badge>
                             ))}
@@ -757,7 +782,11 @@ export default function TicketDetail() {
                               />
                             </div>
                             <span className="text-sm text-mira-700">
-                              {revelioData.socialMediaPresence.professionalScore}/100
+                              {
+                                revelioData.socialMediaPresence
+                                  .professionalScore
+                              }
+                              /100
                             </span>
                           </div>
                         </div>
@@ -768,9 +797,11 @@ export default function TicketDetail() {
                           <Badge
                             className={cn(
                               "text-xs ml-2",
-                              revelioData.publicInformation.sentiment === "positive"
+                              revelioData.publicInformation.sentiment ===
+                                "positive"
                                 ? "bg-mira-green text-white"
-                                : revelioData.publicInformation.sentiment === "negative"
+                                : revelioData.publicInformation.sentiment ===
+                                    "negative"
                                   ? "bg-mira-red text-white"
                                   : "bg-mira-orange text-white",
                             )}
@@ -784,7 +815,8 @@ export default function TicketDetail() {
                           </label>
                           <p className="text-sm text-mira-700">
                             {revelioData.publicInformation.mentions} mentions,{" "}
-                            {revelioData.publicInformation.newsArticles} articles
+                            {revelioData.publicInformation.newsArticles}{" "}
+                            articles
                           </p>
                         </div>
                       </div>
@@ -806,7 +838,12 @@ export default function TicketDetail() {
                         <h4 className="text-sm font-medium text-mira-600">
                           Ticket Status
                         </h4>
-                        <Badge className={cn("mt-2", statusColors[ticketInfo.status])}>
+                        <Badge
+                          className={cn(
+                            "mt-2",
+                            statusColors[ticketInfo.status],
+                          )}
+                        >
                           {ticketInfo.status.replace("_", " ")}
                         </Badge>
                       </div>
@@ -814,7 +851,12 @@ export default function TicketDetail() {
                         <h4 className="text-sm font-medium text-mira-600">
                           Priority Level
                         </h4>
-                        <Badge className={cn("mt-2", priorityColors[ticketInfo.priority])}>
+                        <Badge
+                          className={cn(
+                            "mt-2",
+                            priorityColors[ticketInfo.priority],
+                          )}
+                        >
                           {ticketInfo.priority}
                         </Badge>
                       </div>
@@ -836,7 +878,9 @@ export default function TicketDetail() {
                         <h5 className="font-medium text-mira-900 mb-2">
                           {ticketInfo.subject}
                         </h5>
-                        <p className="text-mira-700 mb-4">{ticketInfo.description}</p>
+                        <p className="text-mira-700 mb-4">
+                          {ticketInfo.description}
+                        </p>
 
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
@@ -872,7 +916,11 @@ export default function TicketDetail() {
                             </h6>
                             <div className="flex flex-wrap gap-2">
                               {ticketInfo.attachments.map((attachment) => (
-                                <Badge key={attachment} variant="outline" className="text-xs">
+                                <Badge
+                                  key={attachment}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
                                   {attachment}
                                 </Badge>
                               ))}
@@ -906,7 +954,8 @@ export default function TicketDetail() {
                             <Badge
                               className={cn(
                                 "text-xs",
-                                salesforceData.contractStatus.current === "active"
+                                salesforceData.contractStatus.current ===
+                                  "active"
                                   ? "bg-mira-green text-white"
                                   : "bg-mira-orange text-white",
                               )}
@@ -920,7 +969,9 @@ export default function TicketDetail() {
                               salesforceData.contractStatus.currency,
                             )}
                           </p>
-                          <p className="text-xs text-mira-500">Contract Value</p>
+                          <p className="text-xs text-mira-500">
+                            Contract Value
+                          </p>
                         </div>
                         <div className="bg-mira-50 p-4 rounded-lg">
                           <span className="text-sm font-medium text-mira-600">
@@ -932,7 +983,8 @@ export default function TicketDetail() {
                           </p>
                           {salesforceData.contractStatus.renewalDate && (
                             <p className="text-xs text-mira-500 mt-1">
-                              Renewal: {salesforceData.contractStatus.renewalDate}
+                              Renewal:{" "}
+                              {salesforceData.contractStatus.renewalDate}
                             </p>
                           )}
                         </div>
@@ -960,7 +1012,10 @@ export default function TicketDetail() {
                               </div>
                               <div className="text-right">
                                 <p className="font-semibold text-mira-900">
-                                  {formatCurrency(payment.amount, payment.currency)}
+                                  {formatCurrency(
+                                    payment.amount,
+                                    payment.currency,
+                                  )}
                                 </p>
                                 <Badge
                                   className={cn(
@@ -991,7 +1046,9 @@ export default function TicketDetail() {
             <TabsContent value="knowledge">
               <Card>
                 <CardHeader>
-                  <CardTitle>KNOWLEDGE BASE - Documents & Interactions</CardTitle>
+                  <CardTitle>
+                    KNOWLEDGE BASE - Documents & Interactions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
@@ -1011,7 +1068,10 @@ export default function TicketDetail() {
                                   {doc.title}
                                 </h5>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="secondary" className="text-xs">
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
                                     {doc.type}
                                   </Badge>
                                   <span className="text-xs text-mira-500">
@@ -1020,7 +1080,11 @@ export default function TicketDetail() {
                                 </div>
                                 <div className="flex flex-wrap gap-1 mt-2">
                                   {doc.tags.map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
+                                    <Badge
+                                      key={tag}
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
                                       {tag}
                                     </Badge>
                                   ))}
@@ -1055,11 +1119,15 @@ export default function TicketDetail() {
                                   {interaction.summary}
                                 </p>
                                 <div className="flex items-center gap-2 mt-2">
-                                  <Badge variant="secondary" className="text-xs">
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
                                     {interaction.type}
                                   </Badge>
                                   <span className="text-xs text-mira-500">
-                                    Participants: {interaction.participants.join(", ")}
+                                    Participants:{" "}
+                                    {interaction.participants.join(", ")}
                                   </span>
                                 </div>
                               </div>
@@ -1102,7 +1170,11 @@ export default function TicketDetail() {
                                     </Badge>
                                   )}
                                   {note.tags.map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-xs">
+                                    <Badge
+                                      key={tag}
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
                                       {tag}
                                     </Badge>
                                   ))}

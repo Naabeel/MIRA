@@ -92,7 +92,7 @@ export default function Dashboard() {
       .slice(0, 5);
   };
 
-    return (
+  return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
