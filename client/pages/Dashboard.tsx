@@ -8,7 +8,6 @@ import {
   TrendingUp,
   Clock,
   AlertTriangle,
-  CheckCircle,
   FileText,
   DollarSign,
   Settings,
