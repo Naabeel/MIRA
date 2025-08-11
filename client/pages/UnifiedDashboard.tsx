@@ -381,7 +381,7 @@ export default function UnifiedDashboard() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-semibold text-glg-900 mb-2">{ticket.subject}</h4>
-                            <p className="text-sm text-glg-600 mb-3 line-clamp-2">{ticket.description}</p>
+                            <p className="text-sm text-glg-600 mb-3 overflow-hidden text-ellipsis">{ticket.description}</p>
                             <div className="flex items-center gap-4 text-sm">
                               {networkMember && (
                                 <div className="flex items-center gap-2">
