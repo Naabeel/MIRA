@@ -21,9 +21,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
                 <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/tickets/:category" element={<TicketList />} />
-          <Route path="/ticket/:ticketId" element={<TicketDetail />} />
+          <Route path="/" element={<UnifiedDashboard />} />
+          <Route path="/legacy/dashboard" element={<Dashboard />} />
+          <Route path="/legacy/tickets/:category" element={<TicketList />} />
+          <Route path="/legacy/ticket/:ticketId" element={<TicketDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
