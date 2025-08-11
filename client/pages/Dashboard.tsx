@@ -75,21 +75,10 @@ const statusColors = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] =
-    useState<TicketCategory | null>(null);
-  const { statistics, tickets } = mockDashboardData;
+  const { statistics } = mockDashboardData;
 
   const handleCategoryClick = (category: TicketCategory) => {
     navigate(`/tickets/${category}`);
-  };
-
-  const getRecentActivity = () => {
-    return tickets
-      .sort(
-        (a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-      )
-      .slice(0, 5);
   };
 
   return (
