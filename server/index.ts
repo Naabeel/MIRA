@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleClassifyTickets, handleTicketDetails, handleGenerateAutoResponse } from "./routes/tickets";
 
 export function createServer() {
   const app = express();
@@ -16,6 +17,11 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // MIRA Ticket API routes
+  app.get("/classify_tickets", handleClassifyTickets);
+  app.get("/ticket_details/:ticketId", handleTicketDetails);
+  app.post("/generate_auto_response", handleGenerateAutoResponse);
 
   return app;
 }
