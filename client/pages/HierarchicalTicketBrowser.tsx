@@ -92,7 +92,7 @@ interface NavigationState {
 
 const priorityColors = {
   low: "bg-gray-200 text-gray-800",
-  medium: "bg-blue-500 text-white", 
+  medium: "bg-blue-500 text-white",
   high: "bg-yellow-500 text-white",
   urgent: "bg-red-500 text-white",
 };
@@ -106,12 +106,17 @@ const channelIcons = {
 };
 
 export default function HierarchicalTicketBrowser() {
-  const [navigationState, setNavigationState] = useState<NavigationState>({ level: "categories" });
-  const [classificationData, setClassificationData] = useState<ClassificationData | null>(null);
+  const [navigationState, setNavigationState] = useState<NavigationState>({
+    level: "categories",
+  });
+  const [classificationData, setClassificationData] =
+    useState<ClassificationData | null>(null);
   const [ticketDetails, setTicketDetails] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({});
   const [showTicketsModal, setShowTicketsModal] = useState(false);
   const [selectedCatalystForModal, setSelectedCatalystForModal] = useState("");
   const [generatingResponse, setGeneratingResponse] = useState(false);
@@ -149,12 +154,12 @@ export default function HierarchicalTicketBrowser() {
       if (!response.ok) throw new Error("Failed to load ticket details");
       const data = await response.json();
       setTicketDetails(data.ticket_details);
-      setNavigationState(prev => ({
+      setNavigationState((prev) => ({
         ...prev,
         level: "details",
         selectedTicketId: ticketId,
       }));
-      
+
       // All sections closed by default
       const allClosed: Record<string, boolean> = {};
       data.ticket_details.sections.forEach((section: any) => {
@@ -169,7 +174,11 @@ export default function HierarchicalTicketBrowser() {
   };
 
   const generateAutoResponse = async () => {
-    if (!ticketDetails || !classificationData || !navigationState.selectedTicketId) {
+    if (
+      !ticketDetails ||
+      !classificationData ||
+      !navigationState.selectedTicketId
+    ) {
       toast({
         title: "Error",
         description: "Missing ticket details for auto-response generation",
@@ -181,7 +190,7 @@ export default function HierarchicalTicketBrowser() {
     const selectedTicket = getSelectedTicket();
     if (!selectedTicket) {
       toast({
-        title: "Error", 
+        title: "Error",
         description: "Could not find ticket information",
         variant: "destructive",
       });
@@ -191,10 +200,14 @@ export default function HierarchicalTicketBrowser() {
     // Find category and catalyst for the selected ticket
     let ticketCategory = "";
     let ticketCatalyst = "";
-    
+
     for (const category of classificationData.ticket_categories) {
       for (const catalyst of category.catalysts) {
-        if (catalyst.tickets.some(t => t.id === navigationState.selectedTicketId)) {
+        if (
+          catalyst.tickets.some(
+            (t) => t.id === navigationState.selectedTicketId,
+          )
+        ) {
           ticketCategory = category.category;
           ticketCatalyst = catalyst.catalyst;
           break;
@@ -213,26 +226,26 @@ export default function HierarchicalTicketBrowser() {
     };
 
     setGeneratingResponse(true);
-    
+
     try {
       const response = await fetch("/generate_auto_response", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestPayload),
       });
-      
+
       if (!response.ok) throw new Error("Failed to generate response");
-      
+
       const data = await response.json();
       setGeneratedResponse(data.generated_auto_response);
       setShowResponseModal(true);
-      
+
       toast({
         title: "Success",
         description: "Auto-response generated successfully!",
       });
     } catch (error) {
-      console.error('Error generating auto response:', error);
+      console.error("Error generating auto response:", error);
       toast({
         title: "Error",
         description: "Failed to generate auto-response. Please try again.",
@@ -284,7 +297,7 @@ export default function HierarchicalTicketBrowser() {
   const navigateBack = () => {
     const { level } = navigationState;
     if (level === "details") {
-      setNavigationState(prev => ({ ...prev, level: "catalysts" }));
+      setNavigationState((prev) => ({ ...prev, level: "catalysts" }));
       setTicketDetails(null);
     } else if (level === "catalysts") {
       setNavigationState({ level: "categories" });
@@ -294,7 +307,7 @@ export default function HierarchicalTicketBrowser() {
   };
 
   const toggleSection = (sectionTitle: string) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
       [sectionTitle]: !prev[sectionTitle],
     }));
@@ -312,21 +325,25 @@ export default function HierarchicalTicketBrowser() {
   const getSelectedCategory = () => {
     if (!classificationData || !navigationState.selectedCategory) return null;
     return classificationData.ticket_categories.find(
-      cat => cat.category === navigationState.selectedCategory
+      (cat) => cat.category === navigationState.selectedCategory,
     );
   };
 
   const getCurrentCatalyst = () => {
     const category = getSelectedCategory();
     if (!category || !selectedCatalystForModal) return null;
-    return category.catalysts.find(cat => cat.catalyst === selectedCatalystForModal);
+    return category.catalysts.find(
+      (cat) => cat.catalyst === selectedCatalystForModal,
+    );
   };
 
   const getSelectedTicket = () => {
     if (!classificationData || !navigationState.selectedTicketId) return null;
     for (const category of classificationData.ticket_categories) {
       for (const catalyst of category.catalysts) {
-        const ticket = catalyst.tickets.find(t => t.id === navigationState.selectedTicketId);
+        const ticket = catalyst.tickets.find(
+          (t) => t.id === navigationState.selectedTicketId,
+        );
         if (ticket) return ticket;
       }
     }
@@ -349,9 +366,14 @@ export default function HierarchicalTicketBrowser() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center max-w-md">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Data</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Error Loading Data
+          </h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={loadClassificationData} className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            onClick={loadClassificationData}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
             Try Again
           </Button>
         </div>
@@ -373,7 +395,9 @@ export default function HierarchicalTicketBrowser() {
             )}
             <div>
               <h1 className="text-2xl font-bold text-gray-900">MIRA</h1>
-              <p className="text-sm text-gray-600">Unified Ticket Management System</p>
+              <p className="text-sm text-gray-600">
+                Unified Ticket Management System
+              </p>
             </div>
           </div>
         </div>
@@ -384,31 +408,48 @@ export default function HierarchicalTicketBrowser() {
         {navigationState.level === "categories" && classificationData && (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Ticket Categories</h2>
-              <p className="text-gray-600">Browse tickets by category and catalyst</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Ticket Categories
+              </h2>
+              <p className="text-gray-600">
+                Browse tickets by category and catalyst
+              </p>
             </div>
-            
+
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {classificationData.ticket_categories.map((category) => (
-                <Card 
+                <Card
                   key={category.category}
                   className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-blue-500"
                   onClick={() => navigateToCatalysts(category.category)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-gray-900">{category.category}</h3>
-                      <Badge className="bg-blue-100 text-blue-800">{category.total_catalysts} catalysts</Badge>
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {category.category}
+                      </h3>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        {category.total_catalysts} catalysts
+                      </Badge>
                     </div>
                     <div className="space-y-2">
                       {category.catalysts.slice(0, 3).map((catalyst) => (
-                        <div key={catalyst.catalyst} className="flex justify-between text-sm">
-                          <span className="text-gray-600">{catalyst.catalyst}</span>
-                          <span className="text-gray-900 font-medium">{catalyst.total_tickets} tickets</span>
+                        <div
+                          key={catalyst.catalyst}
+                          className="flex justify-between text-sm"
+                        >
+                          <span className="text-gray-600">
+                            {catalyst.catalyst}
+                          </span>
+                          <span className="text-gray-900 font-medium">
+                            {catalyst.total_tickets} tickets
+                          </span>
                         </div>
                       ))}
                       {category.catalysts.length > 3 && (
-                        <p className="text-sm text-gray-500">+{category.catalysts.length - 3} more catalysts</p>
+                        <p className="text-sm text-gray-500">
+                          +{category.catalysts.length - 3} more catalysts
+                        </p>
                       )}
                     </div>
                   </CardContent>
@@ -423,22 +464,30 @@ export default function HierarchicalTicketBrowser() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{navigationState.selectedCategory} Catalysts</h2>
-                <p className="text-gray-600">Select a catalyst to view tickets</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {navigationState.selectedCategory} Catalysts
+                </h2>
+                <p className="text-gray-600">
+                  Select a catalyst to view tickets
+                </p>
               </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {getSelectedCategory()?.catalysts.map((catalyst) => (
-                <Card 
+                <Card
                   key={catalyst.catalyst}
                   className="cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => openTicketsModal(catalyst.catalyst)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-900">{catalyst.catalyst}</h3>
-                      <Badge variant="secondary">{catalyst.total_tickets} tickets</Badge>
+                      <h3 className="font-semibold text-gray-900">
+                        {catalyst.catalyst}
+                      </h3>
+                      <Badge variant="secondary">
+                        {catalyst.total_tickets} tickets
+                      </Badge>
                     </div>
                   </CardContent>
                 </Card>
@@ -455,7 +504,9 @@ export default function HierarchicalTicketBrowser() {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Ticket Details</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Ticket Details
+                    </h2>
                     <div className="flex gap-2 mb-4">
                       <Badge variant="outline" className="text-sm">
                         ID: {ticketDetails.id}
@@ -472,10 +523,12 @@ export default function HierarchicalTicketBrowser() {
                   <div className="flex items-start gap-4">
                     <Avatar className="h-16 w-16">
                       <AvatarFallback className="bg-blue-600 text-white text-lg">
-                        {ticketDetails.network_member_details.NAME.split(" ").map((n: string) => n[0]).join("")}
+                        {ticketDetails.network_member_details.NAME.split(" ")
+                          .map((n: string) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
-                    
+
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-gray-900 mb-1">
                         {ticketDetails.network_member_details.NAME}
@@ -488,7 +541,7 @@ export default function HierarchicalTicketBrowser() {
                       <p className="text-blue-600 font-medium mb-2">
                         {ticketDetails.network_member_details.PRACTICE_AREA}
                       </p>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                         <div className="flex items-center gap-2">
                           <Mail className="h-4 w-4 text-gray-400" />
@@ -504,18 +557,26 @@ export default function HierarchicalTicketBrowser() {
                             ticketDetails.network_member_details.CITY,
                             ticketDetails.network_member_details.STATE,
                             ticketDetails.network_member_details.COUNTRY,
-                          ].filter(Boolean).join(", ")}
+                          ]
+                            .filter(Boolean)
+                            .join(", ")}
                         </div>
                       </div>
-                      
+
                       <div className="mt-4 text-sm">
-                        <span className="font-medium text-gray-700">Council: </span>
+                        <span className="font-medium text-gray-700">
+                          Council:{" "}
+                        </span>
                         {ticketDetails.network_member_details.COUNCIL_NAME}
                       </div>
-                      {ticketDetails.network_member_details.LINKED_IN_PROFILE_URL && (
+                      {ticketDetails.network_member_details
+                        .LINKED_IN_PROFILE_URL && (
                         <div className="mt-2">
                           <a
-                            href={ticketDetails.network_member_details.LINKED_IN_PROFILE_URL}
+                            href={
+                              ticketDetails.network_member_details
+                                .LINKED_IN_PROFILE_URL
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm"
@@ -526,24 +587,37 @@ export default function HierarchicalTicketBrowser() {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="text-right text-sm space-y-2">
                       <div>
-                        <span className="text-gray-600">Consultation Rate:</span>
+                        <span className="text-gray-600">
+                          Consultation Rate:
+                        </span>
                         <p className="font-bold text-green-600">
-                          ${ticketDetails.network_member_details.CONSULTATION_RATE}/hr
+                          $
+                          {
+                            ticketDetails.network_member_details
+                              .CONSULTATION_RATE
+                          }
+                          /hr
                         </p>
                       </div>
                       <div>
                         <span className="text-gray-600">Language:</span>
                         <p className="font-medium text-gray-900">
-                          {ticketDetails.network_member_details.CURRENT_PRIMARY_LANGUAGE}
+                          {
+                            ticketDetails.network_member_details
+                              .CURRENT_PRIMARY_LANGUAGE
+                          }
                         </p>
                       </div>
                       <div>
                         <span className="text-gray-600">Member Since:</span>
                         <p className="font-medium text-gray-900">
-                          {formatDate(ticketDetails.network_member_details.PROFILE_CREATE_DATE)}
+                          {formatDate(
+                            ticketDetails.network_member_details
+                              .PROFILE_CREATE_DATE,
+                          )}
                         </p>
                       </div>
                     </div>
@@ -551,7 +625,9 @@ export default function HierarchicalTicketBrowser() {
 
                   {ticketDetails.network_member_details.BIOGRAPHY && (
                     <div className="mt-6 pt-4 border-t border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-2">Biography</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        Biography
+                      </h4>
                       <p className="text-gray-700 text-sm leading-relaxed">
                         {ticketDetails.network_member_details.BIOGRAPHY}
                       </p>
@@ -564,7 +640,7 @@ export default function HierarchicalTicketBrowser() {
             {/* Dynamic Sections */}
             {ticketDetails.sections.map((section: any) => (
               <Card key={section.title} className="border border-gray-200">
-                <CardHeader 
+                <CardHeader
                   className="cursor-pointer hover:bg-gray-50"
                   onClick={() => toggleSection(section.title)}
                 >
@@ -579,7 +655,9 @@ export default function HierarchicalTicketBrowser() {
                     )}
                   </div>
                   {!expandedSections[section.title] && (
-                    <p className="text-sm text-gray-600 mt-2">{section.summary}</p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      {section.summary}
+                    </p>
                   )}
                 </CardHeader>
                 {expandedSections[section.title] && (
@@ -598,12 +676,15 @@ export default function HierarchicalTicketBrowser() {
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <Sparkles className="h-6 w-6 text-blue-600" />
-                    <h3 className="text-xl font-semibold text-gray-900">AI Response Generator</h3>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      AI Response Generator
+                    </h3>
                   </div>
                   <p className="text-gray-600 mb-6">
-                    Generate an intelligent, personalized response for this ticket using AI
+                    Generate an intelligent, personalized response for this
+                    ticket using AI
                   </p>
-                  <Button 
+                  <Button
                     onClick={generateAutoResponse}
                     disabled={generatingResponse}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
@@ -629,7 +710,10 @@ export default function HierarchicalTicketBrowser() {
                           <div className="w-2 h-2 bg-blue-600 rounded-full animation-delay-200"></div>
                           <div className="w-2 h-2 bg-blue-600 rounded-full animation-delay-400"></div>
                         </div>
-                        <span className="text-sm">AI is analyzing ticket details and generating personalized response...</span>
+                        <span className="text-sm">
+                          AI is analyzing ticket details and generating
+                          personalized response...
+                        </span>
                       </div>
                     </div>
                   )}
@@ -652,8 +736,11 @@ export default function HierarchicalTicketBrowser() {
               {getCurrentCatalyst() ? (
                 <div className="space-y-4 pr-4">
                   {getCurrentCatalyst()!.tickets.map((ticket) => {
-                    const ChannelIcon = channelIcons[ticket.channel as keyof typeof channelIcons] || FileText;
-                    
+                    const ChannelIcon =
+                      channelIcons[
+                        ticket.channel as keyof typeof channelIcons
+                      ] || FileText;
+
                     return (
                       <div
                         key={ticket.id}
@@ -669,11 +756,18 @@ export default function HierarchicalTicketBrowser() {
                               {ticket.Description}
                             </p>
                           </div>
-                          <Badge className={cn("ml-4", priorityColors[ticket.priority as keyof typeof priorityColors])}>
+                          <Badge
+                            className={cn(
+                              "ml-4",
+                              priorityColors[
+                                ticket.priority as keyof typeof priorityColors
+                              ],
+                            )}
+                          >
                             {ticket.priority}
                           </Badge>
                         </div>
-                        
+
                         <div className="flex items-center justify-between text-xs text-gray-500">
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-1">
@@ -684,8 +778,12 @@ export default function HierarchicalTicketBrowser() {
                             <span>{ticket.from_address}</span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span>Created: {formatDate(ticket.created_at)}</span>
-                            <span>Updated: {formatDate(ticket.updated_at)}</span>
+                            <span>
+                              Created: {formatDate(ticket.created_at)}
+                            </span>
+                            <span>
+                              Updated: {formatDate(ticket.updated_at)}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -694,7 +792,9 @@ export default function HierarchicalTicketBrowser() {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-gray-500">No tickets found for this catalyst.</p>
+                  <p className="text-gray-500">
+                    No tickets found for this catalyst.
+                  </p>
                 </div>
               )}
             </ScrollArea>
@@ -710,22 +810,29 @@ export default function HierarchicalTicketBrowser() {
                 Generated Auto-Response
               </DialogTitle>
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" onClick={copyResponseToClipboard}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyResponseToClipboard}
+                >
                   <Copy className="h-4 w-4 mr-2" />
                   Copy
                 </Button>
               </div>
             </DialogHeader>
-            
+
             <ScrollArea className="max-h-[60vh] border border-gray-200 rounded-lg">
-              <div 
+              <div
                 className="p-4 prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: generatedResponse }}
               />
             </ScrollArea>
-            
+
             <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-              <Button variant="outline" onClick={() => setShowResponseModal(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowResponseModal(false)}
+              >
                 Close
               </Button>
               <Button className="bg-green-600 hover:bg-green-700">
