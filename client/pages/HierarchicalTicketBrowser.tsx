@@ -161,6 +161,87 @@ export default function HierarchicalTicketBrowser() {
     }));
   };
 
+  const generateAutoResponse = async () => {
+    if (!ticketDetails || !classificationData || !navigationState.selectedTicketId) {
+      toast({
+        title: "Error",
+        description: "Missing ticket details for auto-response generation",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedTicket = getSelectedTicket();
+    if (!selectedTicket) {
+      toast({
+        title: "Error",
+        description: "Could not find ticket information",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Find category and catalyst for the selected ticket
+    let ticketCategory = "";
+    let ticketCatalyst = "";
+
+    for (const category of classificationData.ticket_categories) {
+      for (const catalyst of category.catalysts) {
+        if (catalyst.tickets.some(t => t.id === navigationState.selectedTicketId)) {
+          ticketCategory = category.category;
+          ticketCatalyst = catalyst.catalyst;
+          break;
+        }
+      }
+      if (ticketCategory) break;
+    }
+
+    const requestPayload: AutoResponseRequest = {
+      ticket_id: navigationState.selectedTicketId,
+      category: ticketCategory,
+      catalyst: ticketCatalyst,
+      ticket_details: ticketDetails.ticket_details,
+    };
+
+    setGeneratingResponse(true);
+
+    try {
+      const response = await apiService.generateAutoResponse(requestPayload);
+      setGeneratedResponse(response.generated_auto_response);
+      setShowResponseModal(true);
+
+      toast({
+        title: "Success",
+        description: "Auto-response generated successfully!",
+      });
+    } catch (error) {
+      console.error('Error generating auto response:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate auto-response. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setGeneratingResponse(false);
+    }
+  };
+
+  const copyResponseToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedResponse);
+      toast({
+        title: "Copied",
+        description: "Response copied to clipboard!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
