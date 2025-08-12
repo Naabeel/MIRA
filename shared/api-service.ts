@@ -79,7 +79,7 @@ export interface AutoResponseRequest {
   ticket_description: string;
   category: string;
   catalyst: string;
-  ticket_details: TicketDetailsResponse['ticket_details'];
+  ticket_details: TicketDetailsResponse["ticket_details"];
 }
 
 export interface AutoResponseResponse {
@@ -88,15 +88,15 @@ export interface AutoResponseResponse {
 
 // API Service Class
 class ApiService {
-  private baseUrl: string = '';
+  private baseUrl: string = "";
 
-  constructor(baseUrl: string = '') {
+  constructor(baseUrl: string = "") {
     this.baseUrl = baseUrl;
   }
 
   async classifyTickets(): Promise<TicketClassificationResponse> {
     try {
-      const response = await fetch('/classify_tickets');
+      const response = await fetch("/classify_tickets");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -126,10 +126,10 @@ class ApiService {
     request: AutoResponseRequest,
   ): Promise<AutoResponseResponse> {
     try {
-      const response = await fetch('/generate_auto_response', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request)
+      const response = await fetch("/generate_auto_response", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -157,7 +157,8 @@ class ApiService {
                   id: "1234567890",
                   url: "https://example.com/ticket/1234567890.json",
                   Subject: "Rate increase negotiation for Q2 projects",
-                  Description: "Requesting rate adjustment based on experience and market conditions",
+                  Description:
+                    "Requesting rate adjustment based on experience and market conditions",
                   channel: "email",
                   from_address: "michael.rodriguez@glg.com",
                   created_at: "2024-01-14T11:15:00Z",
@@ -165,13 +166,13 @@ class ApiService {
                   priority: "high",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456789
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                  network_member_id: 123456789,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -200,24 +201,34 @@ class ApiService {
           PREFERRED_CULTURE: "en",
           CURRENT_PRIMARY_LANGUAGE: "English",
           PROFILE_CREATE_DATE: "2022-03-15",
-          PUBLIC_OFFICIAL_IND: "false"
+          PUBLIC_OFFICIAL_IND: "false",
         },
         sections: [
           {
             title: "Work History",
-            summary: "Current Senior Healthcare Consultant at GLG with 8+ years experience.",
+            summary:
+              "Current Senior Healthcare Consultant at GLG with 8+ years experience.",
             details: {
               network_member_id: 123456789,
-              history: []
-            }
-          }
-        ]
-      }
+              history: [],
+            },
+          },
+        ],
+      },
     };
   }
 
-  private getMockAutoResponse(request: AutoResponseRequest): AutoResponseResponse {
-    const { ticket_id, ticket_subject, ticket_description, category, catalyst, ticket_details } = request;
+  private getMockAutoResponse(
+    request: AutoResponseRequest,
+  ): AutoResponseResponse {
+    const {
+      ticket_id,
+      ticket_subject,
+      ticket_description,
+      category,
+      catalyst,
+      ticket_details,
+    } = request;
     const member = ticket_details.network_member_details;
 
     const htmlContent = `
@@ -237,7 +248,7 @@ class ApiService {
     `;
 
     return {
-      generated_auto_response: htmlContent.trim()
+      generated_auto_response: htmlContent.trim(),
     };
   }
 }

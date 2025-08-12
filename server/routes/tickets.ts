@@ -18,7 +18,8 @@ export function handleClassifyTickets(req: Request, res: Response) {
                 id: "1234567890",
                 url: "https://example.com/ticket/1234567890.json",
                 Subject: "Rate increase negotiation for Q2 projects",
-                Description: "Requesting rate adjustment based on experience and market conditions",
+                Description:
+                  "Requesting rate adjustment based on experience and market conditions",
                 channel: "email",
                 from_address: "michael.rodriguez@glg.com",
                 created_at: "2024-01-14T11:15:00Z",
@@ -26,20 +27,20 @@ export function handleClassifyTickets(req: Request, res: Response) {
                 priority: "high",
                 ticket_language: "en",
                 medium: "nmhome",
-                network_member_id: 123456789
-              }
-            ]
-          }
-        ]
-      }
-    ]
+                network_member_id: 123456789,
+              },
+            ],
+          },
+        ],
+      },
+    ],
   });
 }
 
 // GET /ticket_details/:ticketId
 export function handleTicketDetails(req: Request, res: Response) {
   const { ticketId } = req.params;
-  
+
   // This is where your backend logic will go
   // For now, sending a placeholder response to indicate the endpoint exists
   res.json({
@@ -63,7 +64,8 @@ export function handleTicketDetails(req: Request, res: Response) {
         CONSULTATION_RATE: "350.0000",
         MIN_PROJECT_AMOUNT: "5000",
         RECOMMENDED_CONSULTATION_RATE: "300.0000",
-        BIOGRAPHY: "Sarah Chen is a seasoned healthcare consultant with over 8 years of experience in digital transformation initiatives.",
+        BIOGRAPHY:
+          "Sarah Chen is a seasoned healthcare consultant with over 8 years of experience in digital transformation initiatives.",
         COUNCIL_NAME: "Healthcare & Life Sciences",
         PRACTICE_AREA: "Healthcare Analytics",
         IS_DNC: "false",
@@ -75,26 +77,34 @@ export function handleTicketDetails(req: Request, res: Response) {
         NPI_NUMBER: "1234567890",
         LINKED_IN_PROFILE_URL: "https://linkedin.com/in/sarahchen",
         PUBLIC_OFFICIAL_IND: "false",
-        PERSONA_VERIFICATION_DATE: "2024-01-01"
+        PERSONA_VERIFICATION_DATE: "2024-01-01",
       },
       sections: [
         {
           title: "Work History",
-          summary: "Current Senior Healthcare Consultant at GLG with 8+ years experience.",
+          summary:
+            "Current Senior Healthcare Consultant at GLG with 8+ years experience.",
           details: {
             network_member_id: 123456789,
-            history: []
-          }
-        }
-      ]
-    }
+            history: [],
+          },
+        },
+      ],
+    },
   });
 }
 
 // POST /generate_auto_response
 export function handleGenerateAutoResponse(req: Request, res: Response) {
-  const { ticket_id, ticket_subject, ticket_description, category, catalyst, ticket_details } = req.body;
-  
+  const {
+    ticket_id,
+    ticket_subject,
+    ticket_description,
+    category,
+    catalyst,
+    ticket_details,
+  } = req.body;
+
   // This is where your backend logic will go
   // For now, sending a placeholder response to indicate the endpoint exists
   const htmlContent = `
@@ -115,6 +125,6 @@ export function handleGenerateAutoResponse(req: Request, res: Response) {
   `;
 
   res.json({
-    generated_auto_response: htmlContent.trim()
+    generated_auto_response: htmlContent.trim(),
   });
 }
