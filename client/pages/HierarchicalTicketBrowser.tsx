@@ -31,7 +31,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { apiService, type TicketClassificationResponse, type TicketDetailsResponse, type AutoResponseRequest } from "@shared/api-service";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +62,7 @@ export default function HierarchicalTicketBrowser() {
   const [navigationState, setNavigationState] = useState<NavigationState>({
     level: "categories",
   });
-
+  
   const [classificationData, setClassificationData] = useState<TicketClassificationResponse | null>(null);
   const [ticketDetails, setTicketDetails] = useState<TicketDetailsResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -71,7 +70,7 @@ export default function HierarchicalTicketBrowser() {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [showTicketsModal, setShowTicketsModal] = useState(false);
   const [selectedCatalystForModal, setSelectedCatalystForModal] = useState<string | null>(null);
-
+  
   // Auto-response generation state
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [showResponseModal, setShowResponseModal] = useState(false);
@@ -174,7 +173,7 @@ export default function HierarchicalTicketBrowser() {
     const selectedTicket = getSelectedTicket();
     if (!selectedTicket) {
       toast({
-        title: "Error",
+        title: "Error", 
         description: "Could not find ticket information",
         variant: "destructive",
       });
@@ -184,7 +183,7 @@ export default function HierarchicalTicketBrowser() {
     // Find category and catalyst for the selected ticket
     let ticketCategory = "";
     let ticketCatalyst = "";
-
+    
     for (const category of classificationData.ticket_categories) {
       for (const catalyst of category.catalysts) {
         if (catalyst.tickets.some(t => t.id === navigationState.selectedTicketId)) {
@@ -204,12 +203,12 @@ export default function HierarchicalTicketBrowser() {
     };
 
     setGeneratingResponse(true);
-
+    
     try {
       const response = await apiService.generateAutoResponse(requestPayload);
       setGeneratedResponse(response.generated_auto_response);
       setShowResponseModal(true);
-
+      
       toast({
         title: "Success",
         description: "Auto-response generated successfully!",
@@ -643,145 +642,226 @@ export default function HierarchicalTicketBrowser() {
               </CardContent>
             </Card>
 
-            {/* Dynamic Sections from API */}
+            {/* Dynamic Sections with Summaries */}
             {ticketDetails.ticket_details.sections.map((section) => (
-              <CollapsibleSection
-                key={section.title}
-                title={section.title}
-                isExpanded={expandedSections[section.title] || false}
-                onToggle={() => toggleSection(section.title)}
-                icon={
-                  section.title === "Work History" ? <Briefcase className="h-5 w-5" /> :
-                  section.title === "Fee History" ? <DollarSign className="h-5 w-5" /> :
-                  section.title === "Project History" ? <FileText className="h-5 w-5" /> :
-                  section.title === "TC History" ? <Shield className="h-5 w-5" /> :
-                  <FileText className="h-5 w-5" />
-                }
-              >
-                <div className="space-y-4">
-                  {section.title === "Work History" && section.details.history && (
-                    <div className="space-y-3">
-                      {section.details.history.map((job: any, index: number) => (
-                        <div key={index} className="p-4 border border-glg-200 rounded-lg">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h4 className="font-semibold text-glg-900">{job.job_title}</h4>
-                              <p className="text-glg-700">{job.company_name}</p>
-                            </div>
-                            {job.current_ind && (
-                              <Badge className="bg-glg-green text-white">Current</Badge>
-                            )}
-                          </div>
-                          <p className="text-glg-600 text-sm mb-2">{job.description}</p>
-                          <div className="text-xs text-glg-500">
-                            {job.start_month}/{job.start_year} - {job.current_ind ? "Present" : `${job.end_month}/${job.end_year}`}
-                          </div>
-                        </div>
-                      ))}
+              <Card key={section.title} className="border border-glg-200">
+                <CardHeader 
+                  className="cursor-pointer hover:bg-glg-50 transition-colors"
+                  onClick={() => toggleSection(section.title)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-glg-100"
+                      >
+                        {expandedSections[section.title] ? (
+                          <ChevronDown className="h-4 w-4 text-glg-600" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-glg-600" />
+                        )}
+                      </Button>
+                      <div className="text-glg-navy">
+                        {section.title === "Work History" ? <Briefcase className="h-5 w-5" /> :
+                         section.title === "Fee History" ? <DollarSign className="h-5 w-5" /> :
+                         section.title === "Project History" ? <FileText className="h-5 w-5" /> :
+                         section.title === "TC History" ? <Shield className="h-5 w-5" /> :
+                         <FileText className="h-5 w-5" />}
+                      </div>
+                      <CardTitle className="text-lg font-semibold text-glg-900">
+                        {section.title}
+                      </CardTitle>
+                    </div>
+                  </div>
+                  
+                  {/* Summary Card - shown when collapsed */}
+                  {!expandedSections[section.title] && section.summary && (
+                    <div className="mt-4 p-4 bg-glg-50 border border-glg-200 rounded-lg">
+                      <p className="text-glg-700 text-sm leading-relaxed">
+                        {section.summary}
+                      </p>
+                      <p className="text-xs text-glg-500 mt-2">
+                        Click to expand for full details
+                      </p>
                     </div>
                   )}
-
-                  {section.title === "Fee History" && section.details.history && (
-                    <div className="space-y-3">
-                      {section.details.history.map((fee: any, index: number) => (
-                        <div key={index} className="p-4 border border-glg-200 rounded-lg">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h4 className="font-semibold text-glg-900">Rate Change</h4>
-                              <p className="text-glg-600 text-sm">{fee.reason}</p>
+                </CardHeader>
+                
+                {/* Full Details - shown when expanded */}
+                {expandedSections[section.title] && (
+                  <CardContent className="border-t border-glg-200 pt-4">
+                    <div className="space-y-4">
+                      {section.title === "Work History" && section.details.history && (
+                        <div className="space-y-3">
+                          {section.details.history.map((job: any, index: number) => (
+                            <div key={index} className="p-4 border border-glg-200 rounded-lg">
+                              <div className="flex justify-between items-start mb-2">
+                                <div>
+                                  <h4 className="font-semibold text-glg-900">{job.job_title}</h4>
+                                  <p className="text-glg-700">{job.company_name}</p>
+                                </div>
+                                {job.current_ind && (
+                                  <Badge className="bg-glg-green text-white">Current</Badge>
+                                )}
+                              </div>
+                              <p className="text-glg-600 text-sm mb-2">{job.description}</p>
+                              <div className="text-xs text-glg-500">
+                                {job.start_month}/{job.start_year} - {job.current_ind ? "Present" : `${job.end_month}/${job.end_year}`}
+                              </div>
                             </div>
-                            <Badge className={cn(
-                              fee.status === "approved" ? "bg-glg-green text-white" : "bg-glg-amber text-white"
-                            )}>
-                              {fee.status}
-                            </Badge>
-                          </div>
-                          <div className="grid grid-cols-3 gap-4 text-sm">
-                            <div>
-                              <span className="text-glg-600">Requested:</span>
-                              <p className="font-medium text-glg-900">${fee.requested_rate}</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">Recommended:</span>
-                              <p className="font-medium text-glg-900">${fee.recommended_rate}</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">Final:</span>
-                              <p className="font-medium text-glg-900">${fee.renegotiate_rate}</p>
-                            </div>
-                          </div>
-                          <p className="text-xs text-glg-500 mt-2">
-                            Updated: {formatDate(fee.last_update_date)} by {fee.last_update_by}
-                          </p>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      )}
 
-                  {section.title === "Project History" && section.details.history && (
-                    <div className="space-y-3">
-                      {section.details.history.map((project: any, index: number) => (
-                        <div key={index} className="p-4 border border-glg-200 rounded-lg">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h4 className="font-semibold text-glg-900">{project.title}</h4>
-                              <p className="text-glg-600 text-sm">{project.description}</p>
-                              <p className="text-glg-700 text-sm mt-1">{project.council_name}</p>
-                            </div>
-                            <Badge className="bg-glg-blue text-white">
-                              ${project.cm_rate_for_project}/hr
-                            </Badge>
-                          </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
-                            <div>
-                              <span className="text-glg-600">Duration:</span>
-                              <p className="font-medium text-glg-900">{project.client_duration}min</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">Product:</span>
-                              <p className="font-medium text-glg-900">{project.product_name}</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">RM:</span>
-                              <p className="font-medium text-glg-900">{project.primary_rm}</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">Call Date:</span>
-                              <p className="font-medium text-glg-900">
-                                {project.first_call_occurred_date ? formatDate(project.first_call_occurred_date) : "Not scheduled"}
+                      {section.title === "Fee History" && section.details.history && (
+                        <div className="space-y-3">
+                          {section.details.history.map((fee: any, index: number) => (
+                            <div key={index} className="p-4 border border-glg-200 rounded-lg">
+                              <div className="flex justify-between items-start mb-2">
+                                <div>
+                                  <h4 className="font-semibold text-glg-900">Rate Change</h4>
+                                  <p className="text-glg-600 text-sm">{fee.reason}</p>
+                                </div>
+                                <Badge className={cn(
+                                  fee.status === "approved" ? "bg-glg-green text-white" : "bg-glg-amber text-white"
+                                )}>
+                                  {fee.status}
+                                </Badge>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                  <span className="text-glg-600">Requested:</span>
+                                  <p className="font-medium text-glg-900">${fee.requested_rate}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Recommended:</span>
+                                  <p className="font-medium text-glg-900">${fee.recommended_rate}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Final:</span>
+                                  <p className="font-medium text-glg-900">${fee.renegotiate_rate}</p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-glg-500 mt-2">
+                                Updated: {formatDate(fee.last_update_date)} by {fee.last_update_by}
                               </p>
                             </div>
-                          </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      )}
 
-                  {section.title === "TC History" && section.details.history && (
-                    <div className="space-y-3">
-                      {section.details.history.map((tc: any, index: number) => (
-                        <div key={index} className="p-4 border border-glg-200 rounded-lg">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div>
-                              <span className="text-glg-600">Period Start:</span>
-                              <p className="font-medium text-glg-900">{formatDate(tc.tc_start_date)}</p>
+                      {section.title === "Project History" && section.details.history && (
+                        <div className="space-y-3">
+                          {section.details.history.map((project: any, index: number) => (
+                            <div key={index} className="p-4 border border-glg-200 rounded-lg">
+                              <div className="flex justify-between items-start mb-2">
+                                <div>
+                                  <h4 className="font-semibold text-glg-900">{project.title}</h4>
+                                  <p className="text-glg-600 text-sm">{project.description}</p>
+                                  <p className="text-glg-700 text-sm mt-1">{project.council_name}</p>
+                                </div>
+                                <Badge className="bg-glg-blue text-white">
+                                  ${project.cm_rate_for_project}/hr
+                                </Badge>
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
+                                <div>
+                                  <span className="text-glg-600">Duration:</span>
+                                  <p className="font-medium text-glg-900">{project.client_duration}min</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Product:</span>
+                                  <p className="font-medium text-glg-900">{project.product_name}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">RM:</span>
+                                  <p className="font-medium text-glg-900">{project.primary_rm}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Call Date:</span>
+                                  <p className="font-medium text-glg-900">
+                                    {project.first_call_occurred_date ? formatDate(project.first_call_occurred_date) : "Not scheduled"}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <span className="text-glg-600">Period End:</span>
-                              <p className="font-medium text-glg-900">{formatDate(tc.tc_end_date)}</p>
-                            </div>
-                            <div>
-                              <span className="text-glg-600">Next Period:</span>
-                              <p className="font-medium text-glg-900">{formatDate(tc.next_tc_start_date)}</p>
-                            </div>
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
+
+                      {section.title === "TC History" && section.details.history && (
+                        <div className="space-y-3">
+                          {section.details.history.map((tc: any, index: number) => (
+                            <div key={index} className="p-4 border border-glg-200 rounded-lg">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                <div>
+                                  <span className="text-glg-600">Period Start:</span>
+                                  <p className="font-medium text-glg-900">{formatDate(tc.tc_start_date)}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Period End:</span>
+                                  <p className="font-medium text-glg-900">{formatDate(tc.tc_end_date)}</p>
+                                </div>
+                                <div>
+                                  <span className="text-glg-600">Next Period:</span>
+                                  <p className="font-medium text-glg-900">{formatDate(tc.next_tc_start_date)}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+
+            {/* Auto Generate Response Button */}
+            <Card className="border-l-4 border-l-glg-blue">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <Sparkles className="h-6 w-6 text-glg-blue" />
+                    <h3 className="text-xl font-semibold text-glg-900">AI Response Generator</h3>
+                  </div>
+                  <p className="text-glg-600 mb-6">
+                    Generate an intelligent, personalized response for this ticket using AI
+                  </p>
+                  <Button 
+                    onClick={generateAutoResponse}
+                    disabled={generatingResponse}
+                    className="bg-glg-blue hover:bg-glg-blue-dark text-white px-8 py-3 text-lg"
+                    size="lg"
+                  >
+                    {generatingResponse ? (
+                      <>
+                        <Loader2 className="h-5 w-5 mr-3 animate-spin" />
+                        Generating Response...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-5 w-5 mr-3" />
+                        Auto Generate Response
+                      </>
+                    )}
+                  </Button>
+                  {generatingResponse && (
+                    <div className="mt-4 p-4 bg-glg-50 rounded-lg">
+                      <div className="flex items-center justify-center gap-3 text-glg-700">
+                        <div className="animate-pulse flex space-x-1">
+                          <div className="w-2 h-2 bg-glg-blue rounded-full"></div>
+                          <div className="w-2 h-2 bg-glg-blue rounded-full animation-delay-200"></div>
+                          <div className="w-2 h-2 bg-glg-blue rounded-full animation-delay-400"></div>
+                        </div>
+                        <span className="text-sm">AI is analyzing ticket details and generating personalized response...</span>
+                      </div>
                     </div>
                   )}
                 </div>
-              </CollapsibleSection>
-            ))}
+              </CardContent>
+            </Card>
           </div>
         )}
 
@@ -849,6 +929,48 @@ export default function HierarchicalTicketBrowser() {
                 </div>
               )}
             </ScrollArea>
+          </DialogContent>
+        </Dialog>
+
+        {/* Auto Response Modal */}
+        <Dialog open={showResponseModal} onOpenChange={setShowResponseModal}>
+          <DialogContent className="max-w-5xl max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-glg-blue" />
+                Generated Email Response
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 p-3 bg-glg-50 rounded-lg">
+                <p className="text-sm text-glg-600 flex-1">
+                  AI has generated a personalized email response based on the ticket details and network member information.
+                </p>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={copyResponseToClipboard}>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+              
+              <ScrollArea className="max-h-[60vh] border border-glg-200 rounded-lg">
+                <div 
+                  className="p-4 prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: generatedResponse }}
+                />
+              </ScrollArea>
+              
+              <div className="flex justify-end gap-3 pt-4 border-t border-glg-200">
+                <Button variant="outline" onClick={() => setShowResponseModal(false)}>
+                  Close
+                </Button>
+                <Button className="bg-glg-green hover:bg-glg-green/90">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Email
+                </Button>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
