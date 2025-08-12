@@ -107,12 +107,12 @@ export default function HierarchicalTicketBrowser() {
         level: "details",
         selectedTicketId: ticketId,
       }));
-      // Auto-expand all sections on details view
-      const autoExpanded: Record<string, boolean> = {};
+      // All sections closed by default - only show summaries
+      const allClosed: Record<string, boolean> = {};
       data.ticket_details.sections.forEach(section => {
-        autoExpanded[section.title] = true;
+        allClosed[section.title] = false;
       });
-      setExpandedSections(autoExpanded);
+      setExpandedSections(allClosed);
     } catch (err) {
       setError("Failed to load ticket details. Please try again.");
     } finally {
