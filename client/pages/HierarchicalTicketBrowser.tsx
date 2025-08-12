@@ -196,7 +196,9 @@ export default function HierarchicalTicketBrowser() {
     }
 
     const requestPayload: AutoResponseRequest = {
-      ticket_id: navigationState.selectedTicketId,
+      ticket_id: parseInt(navigationState.selectedTicketId),
+      ticket_subject: selectedTicket.Subject,
+      ticket_description: selectedTicket.Description,
       category: ticketCategory,
       catalyst: ticketCatalyst,
       ticket_details: ticketDetails.ticket_details,
