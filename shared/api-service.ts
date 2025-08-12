@@ -457,6 +457,7 @@ class ApiService {
         sections: [
           {
             title: "Work History",
+            summary: "Current Senior Healthcare Consultant at GLG with 8+ years experience. Previously at McKinsey & Company and Deloitte Consulting specializing in healthcare analytics and digital transformation.",
             details: {
               network_member_id: 123456789,
               history: [
