@@ -541,6 +541,7 @@ class ApiService {
           },
           {
             title: "Project History",
+            summary: "Active in Healthcare & Life Sciences council. Recent projects include digital transformation strategy ($350/hr) and telemedicine implementation assessment. High performance with 120+ minute consultations.",
             details: {
               network_member_id: 123456789,
               history: [
