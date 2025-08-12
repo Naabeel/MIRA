@@ -111,11 +111,30 @@ class ApiService {
       // This will be replaced with actual API call when backend is ready
       // const response = await fetch(`${this.baseUrl}/ticket_details/${ticketId}`);
       // return await response.json();
-      
+
       // Mock data for now - structured exactly like the API response
       return this.getMockTicketDetails(ticketId);
     } catch (error) {
       console.error('Error fetching ticket details:', error);
+      throw error;
+    }
+  }
+
+  async generateAutoResponse(request: AutoResponseRequest): Promise<AutoResponseResponse> {
+    try {
+      // This will be replaced with actual API call when backend is ready
+      // const response = await fetch(`${this.baseUrl}/generate_auto_response`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(request)
+      // });
+      // return await response.json();
+
+      // Mock data for now - simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 3000)); // 3 second delay
+      return this.getMockAutoResponse(request);
+    } catch (error) {
+      console.error('Error generating auto response:', error);
       throw error;
     }
   }
