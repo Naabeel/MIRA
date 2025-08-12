@@ -22,7 +22,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
                 <Routes>
-          <Route path="/" element={<UnifiedDashboard />} />
+          <Route path="/" element={<HierarchicalTicketBrowser />} />
+          <Route path="/unified" element={<UnifiedDashboard />} />
           <Route path="/legacy/dashboard" element={<Dashboard />} />
           <Route path="/legacy/tickets/:category" element={<TicketList />} />
           <Route path="/legacy/ticket/:ticketId" element={<TicketDetail />} />
