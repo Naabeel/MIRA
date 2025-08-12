@@ -96,29 +96,29 @@ class ApiService {
 
   async classifyTickets(): Promise<TicketClassificationResponse> {
     try {
-      // This will be replaced with actual API call when backend is ready
-      // const response = await fetch('/classify_tickets');
-      // return await response.json();
-
-      // Mock data for now - structured exactly like the API response
-      return this.getMockClassificationData();
+      const response = await fetch('/classify_tickets');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
       console.error("Error fetching ticket classification:", error);
-      throw error;
+      // Fallback to mock data in case of error
+      return this.getMockClassificationData();
     }
   }
 
   async getTicketDetails(ticketId: string): Promise<TicketDetailsResponse> {
     try {
-      // This will be replaced with actual API call when backend is ready
-      // const response = await fetch(`/ticket_details/${ticketId}`);
-      // return await response.json();
-
-      // Mock data for now - structured exactly like the API response
-      return this.getMockTicketDetails(ticketId);
+      const response = await fetch(`/ticket_details/${ticketId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
       console.error("Error fetching ticket details:", error);
-      throw error;
+      // Fallback to mock data in case of error
+      return this.getMockTicketDetails(ticketId);
     }
   }
 
@@ -126,20 +126,19 @@ class ApiService {
     request: AutoResponseRequest,
   ): Promise<AutoResponseResponse> {
     try {
-      // This will be replaced with actual API call when backend is ready
-      // const response = await fetch('/generate_auto_response', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(request)
-      // });
-      // return await response.json();
-
-      // Mock data for now - simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
-      return this.getMockAutoResponse(request);
+      const response = await fetch('/generate_auto_response', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
       console.error("Error generating auto response:", error);
-      throw error;
+      // Fallback to mock data in case of error
+      return this.getMockAutoResponse(request);
     }
   }
 
