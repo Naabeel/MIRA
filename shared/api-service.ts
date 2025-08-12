@@ -602,6 +602,7 @@ class ApiService {
           },
           {
             title: "TC History",
+            summary: "Current terms period: 2024-01-01 to 2024-12-31. Next renewal: 2025-01-01. Consistent annual renewals since joining in 2022.",
             details: {
               network_member_id: 123456789,
               history: [
