@@ -18,12 +18,14 @@ import {
   Shield,
   Users,
   ExternalLink,
+  X,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
 import { apiService, type TicketClassificationResponse, type TicketDetailsResponse } from "@shared/api-service";
 import { cn } from "@/lib/utils";
@@ -61,6 +63,8 @@ export default function HierarchicalTicketBrowser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [showTicketsModal, setShowTicketsModal] = useState(false);
+  const [selectedCatalystForModal, setSelectedCatalystForModal] = useState<string | null>(null);
 
   // Load initial classification data
   useEffect(() => {
@@ -83,6 +87,7 @@ export default function HierarchicalTicketBrowser() {
   const loadTicketDetails = async (ticketId: string) => {
     setLoading(true);
     setError(null);
+    setShowTicketsModal(false);
     try {
       const data = await apiService.getTicketDetails(ticketId);
       setTicketDetails(data);
@@ -108,6 +113,7 @@ export default function HierarchicalTicketBrowser() {
     setNavigationState({ level: "categories" });
     setTicketDetails(null);
     setError(null);
+    setShowTicketsModal(false);
   };
 
   const navigateToCatalysts = (category: string) => {
@@ -117,29 +123,24 @@ export default function HierarchicalTicketBrowser() {
     });
     setTicketDetails(null);
     setError(null);
+    setShowTicketsModal(false);
   };
 
-  const navigateToTickets = (catalyst: string) => {
-    setNavigationState(prev => ({
-      ...prev,
-      level: "tickets",
-      selectedCatalyst: catalyst,
-    }));
-    setTicketDetails(null);
-    setError(null);
+  const openTicketsModal = (catalyst: string) => {
+    setSelectedCatalystForModal(catalyst);
+    setShowTicketsModal(true);
   };
 
   const navigateBack = () => {
     const { level } = navigationState;
     if (level === "details") {
-      setNavigationState(prev => ({ ...prev, level: "tickets" }));
-      setTicketDetails(null);
-    } else if (level === "tickets") {
       setNavigationState(prev => ({ ...prev, level: "catalysts" }));
+      setTicketDetails(null);
     } else if (level === "catalysts") {
       setNavigationState({ level: "categories" });
     }
     setError(null);
+    setShowTicketsModal(false);
   };
 
   const toggleSection = (sectionTitle: string) => {
@@ -176,8 +177,20 @@ export default function HierarchicalTicketBrowser() {
 
   const getCurrentCatalyst = () => {
     const category = getCurrentCategory();
-    if (!category || !navigationState.selectedCatalyst) return null;
-    return category.catalysts.find(cat => cat.catalyst === navigationState.selectedCatalyst);
+    if (!category || !selectedCatalystForModal) return null;
+    return category.catalysts.find(cat => cat.catalyst === selectedCatalystForModal);
+  };
+
+  const getSelectedTicket = () => {
+    if (!classificationData || !navigationState.selectedTicketId) return null;
+    
+    for (const category of classificationData.ticket_categories) {
+      for (const catalyst of category.catalysts) {
+        const ticket = catalyst.tickets.find(t => t.id === navigationState.selectedTicketId);
+        if (ticket) return ticket;
+      }
+    }
+    return null;
   };
 
   const getBreadcrumb = () => {
@@ -185,11 +198,8 @@ export default function HierarchicalTicketBrowser() {
     if (navigationState.selectedCategory) {
       crumbs.push(navigationState.selectedCategory);
     }
-    if (navigationState.selectedCatalyst) {
-      crumbs.push(navigationState.selectedCatalyst);
-    }
     if (navigationState.level === "details") {
-      crumbs.push("Details");
+      crumbs.push("Ticket Details");
     }
     return crumbs.join(" → ");
   };
@@ -229,16 +239,8 @@ export default function HierarchicalTicketBrowser() {
       <div className="max-w-7xl mx-auto">
         {/* Header with Navigation */}
         <div className="bg-white rounded-lg shadow-sm border border-glg-200 p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-glg-navy to-glg-blue rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">M</span>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-glg-900">MIRA Ticket Browser</h1>
-                <p className="text-glg-600">Navigate: {getBreadcrumb()}</p>
-              </div>
-            </div>
+          <div className="flex items-center gap-4">
+            {/* Back button on the left */}
             {navigationState.level !== "categories" && (
               <Button 
                 variant="outline" 
@@ -249,6 +251,13 @@ export default function HierarchicalTicketBrowser() {
                 Back
               </Button>
             )}
+            <div className="w-12 h-12 bg-gradient-to-br from-glg-navy to-glg-blue rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">M</span>
+            </div>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-glg-900">MIRA Ticket Browser</h1>
+              <p className="text-glg-600">Navigate: {getBreadcrumb()}</p>
+            </div>
           </div>
           {loading && (
             <div className="mt-4 flex items-center gap-2 text-glg-600">
@@ -294,130 +303,123 @@ export default function HierarchicalTicketBrowser() {
           </Card>
         )}
 
-        {/* Catalysts View */}
+        {/* Enhanced Catalysts View - Shows category and catalysts below */}
         {navigationState.level === "catalysts" && classificationData && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-glg-blue" />
-                {navigationState.selectedCategory} Catalysts
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {getCurrentCategory() ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {getCurrentCategory()!.catalysts.map((catalyst) => (
-                    <div
-                      key={catalyst.catalyst}
-                      className="p-5 bg-white border border-glg-200 rounded-lg hover:shadow-md hover:border-glg-navy transition-all cursor-pointer group"
-                      onClick={() => navigateToTickets(catalyst.catalyst)}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-lg font-semibold text-glg-900 group-hover:text-glg-navy transition-colors">
-                          {catalyst.catalyst}
-                        </h3>
-                        <Badge className="bg-glg-100 text-glg-800">
-                          {catalyst.total_tickets} tickets
-                        </Badge>
-                      </div>
-                      <p className="text-glg-600 text-sm">
-                        View {catalyst.total_tickets} ticket{catalyst.total_tickets !== 1 ? 's' : ''} 
-                        in this catalyst
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 text-glg-400 mx-auto mb-4" />
-                  <p className="text-glg-600">No catalysts found</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+          <div className="space-y-6">
+            {/* Selected Category Display */}
+            <Card className="border-l-4 border-l-glg-navy">
+              <CardHeader className="bg-gradient-to-r from-glg-50 to-white">
+                <CardTitle className="text-2xl text-glg-900">
+                  {navigationState.selectedCategory} Category
+                </CardTitle>
+                <p className="text-glg-600">
+                  Explore catalysts and tickets in this category
+                </p>
+              </CardHeader>
+            </Card>
 
-        {/* Tickets List View */}
-        {navigationState.level === "tickets" && classificationData && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-glg-green" />
-                {navigationState.selectedCatalyst} Tickets
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {getCurrentCatalyst() ? (
-                <div className="space-y-4">
-                  {getCurrentCatalyst()!.tickets.map((ticket) => {
-                    const ChannelIcon = channelIcons[ticket.channel as keyof typeof channelIcons] || FileText;
-                    
-                    return (
+            {/* Catalysts displayed below the category */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-glg-blue" />
+                  Available Catalysts
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {getCurrentCategory() ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {getCurrentCategory()!.catalysts.map((catalyst) => (
                       <div
-                        key={ticket.id}
-                        className="p-5 bg-white border border-glg-200 rounded-lg hover:shadow-md hover:border-glg-navy transition-all cursor-pointer"
-                        onClick={() => loadTicketDetails(ticket.id)}
+                        key={catalyst.catalyst}
+                        className="p-5 bg-white border border-glg-200 rounded-lg hover:shadow-md hover:border-glg-navy transition-all"
                       >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-glg-900 mb-2">
-                              {ticket.Subject}
-                            </h3>
-                            <p className="text-glg-600 text-sm mb-3 overflow-hidden text-ellipsis">
-                              {ticket.Description}
-                            </p>
-                          </div>
-                          <Badge className={cn("ml-4", priorityColors[ticket.priority as keyof typeof priorityColors])}>
-                            {ticket.priority}
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-lg font-semibold text-glg-900">
+                            {catalyst.catalyst}
+                          </h3>
+                          <Badge className="bg-glg-100 text-glg-800">
+                            {catalyst.total_tickets} tickets
                           </Badge>
                         </div>
-                        
-                        <div className="flex items-center gap-6 text-sm text-glg-600">
-                          <div className="flex items-center gap-1">
-                            <ChannelIcon className="h-4 w-4" />
-                            <span className="capitalize">{ticket.channel}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-4 w-4" />
-                            <span>{ticket.from_address}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>Created: {formatDate(ticket.created_at)}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            <span>Updated: {formatDate(ticket.updated_at)}</span>
-                          </div>
-                        </div>
+                        <p className="text-glg-600 text-sm mb-4">
+                          {catalyst.total_tickets} ticket{catalyst.total_tickets !== 1 ? 's' : ''} 
+                          available in this catalyst
+                        </p>
+                        <Button 
+                          onClick={() => openTicketsModal(catalyst.catalyst)}
+                          className="w-full"
+                          variant="outline"
+                        >
+                          View Tickets
+                        </Button>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <AlertCircle className="h-12 w-12 text-glg-400 mx-auto mb-4" />
-                  <p className="text-glg-600">No tickets found</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <AlertCircle className="h-12 w-12 text-glg-400 mx-auto mb-4" />
+                    <p className="text-glg-600">No catalysts found</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Ticket Details View */}
         {navigationState.level === "details" && ticketDetails && (
           <div className="space-y-6">
-            {/* Ticket Information */}
+            {/* Ticket Information from API Response */}
             <Card className="border-l-4 border-l-glg-navy">
               <CardHeader className="bg-gradient-to-r from-glg-50 to-white">
                 <div className="flex items-start justify-between">
-                  <div>
+                  <div className="flex-1">
                     <CardTitle className="text-2xl text-glg-900 mb-2">
                       Ticket Details
                     </CardTitle>
-                    <Badge variant="outline" className="text-sm">
-                      ID: {ticketDetails.ticket_details.id}
-                    </Badge>
+                    <div className="flex items-center gap-4 mb-4">
+                      <Badge variant="outline" className="text-sm">
+                        ID: {ticketDetails.ticket_details.id}
+                      </Badge>
+                      <Badge variant="outline" className="text-sm">
+                        Network Member: {ticketDetails.ticket_details.linked_network_member_id}
+                      </Badge>
+                    </div>
+                    {/* Display ticket details from original API classification */}
+                    {(() => {
+                      const ticket = getSelectedTicket();
+                      if (ticket) {
+                        return (
+                          <div className="space-y-3">
+                            <h3 className="text-xl font-bold text-glg-900">{ticket.Subject}</h3>
+                            <p className="text-glg-700">{ticket.Description}</p>
+                            <div className="flex items-center gap-4 flex-wrap">
+                              <Badge className={cn("text-sm", priorityColors[ticket.priority as keyof typeof priorityColors])}>
+                                {ticket.priority.toUpperCase()} PRIORITY
+                              </Badge>
+                              <div className="flex items-center gap-2 text-sm text-glg-600">
+                                <Calendar className="h-4 w-4" />
+                                Created: {formatDate(ticket.created_at)}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-glg-600">
+                                <Clock className="h-4 w-4" />
+                                Updated: {formatDate(ticket.updated_at)}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-glg-600">
+                                <Mail className="h-4 w-4" />
+                                From: {ticket.from_address}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-glg-600">
+                                <Building className="h-4 w-4" />
+                                Channel: {ticket.channel}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
                 </div>
               </CardHeader>
@@ -549,7 +551,7 @@ export default function HierarchicalTicketBrowser() {
               </CardContent>
             </Card>
 
-            {/* Dynamic Sections */}
+            {/* Dynamic Sections from API */}
             {ticketDetails.ticket_details.sections.map((section) => (
               <CollapsibleSection
                 key={section.title}
@@ -690,6 +692,73 @@ export default function HierarchicalTicketBrowser() {
             ))}
           </div>
         )}
+
+        {/* Tickets Modal */}
+        <Dialog open={showTicketsModal} onOpenChange={setShowTicketsModal}>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Briefcase className="h-5 w-5 text-glg-green" />
+                {selectedCatalystForModal} Tickets
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="max-h-[60vh]">
+              {getCurrentCatalyst() ? (
+                <div className="space-y-4 pr-4">
+                  {getCurrentCatalyst()!.tickets.map((ticket) => {
+                    const ChannelIcon = channelIcons[ticket.channel as keyof typeof channelIcons] || FileText;
+                    
+                    return (
+                      <div
+                        key={ticket.id}
+                        className="p-5 bg-white border border-glg-200 rounded-lg hover:shadow-md hover:border-glg-navy transition-all cursor-pointer"
+                        onClick={() => loadTicketDetails(ticket.id)}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-glg-900 mb-2">
+                              {ticket.Subject}
+                            </h3>
+                            <p className="text-glg-600 text-sm mb-3 overflow-hidden text-ellipsis">
+                              {ticket.Description}
+                            </p>
+                          </div>
+                          <Badge className={cn("ml-4", priorityColors[ticket.priority as keyof typeof priorityColors])}>
+                            {ticket.priority}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center gap-6 text-sm text-glg-600">
+                          <div className="flex items-center gap-1">
+                            <ChannelIcon className="h-4 w-4" />
+                            <span className="capitalize">{ticket.channel}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Mail className="h-4 w-4" />
+                            <span>{ticket.from_address}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            <span>Created: {formatDate(ticket.created_at)}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>Updated: {formatDate(ticket.updated_at)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <AlertCircle className="h-12 w-12 text-glg-400 mx-auto mb-4" />
+                  <p className="text-glg-600">No tickets found</p>
+                </div>
+              )}
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
