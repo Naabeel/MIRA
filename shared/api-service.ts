@@ -73,6 +73,17 @@ export interface TicketDetailsResponse {
   };
 }
 
+export interface AutoResponseRequest {
+  ticket_id: string;
+  category: string;
+  catalyst: string;
+  ticket_details: TicketDetailsResponse['ticket_details'];
+}
+
+export interface AutoResponseResponse {
+  generated_auto_response: string;
+}
+
 // API Service Class
 class ApiService {
   private baseUrl: string = '';
