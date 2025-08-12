@@ -502,6 +502,7 @@ class ApiService {
           },
           {
             title: "Fee History",
+            summary: "Current consultation rate: $365/hr (approved). Recent rate increases in 2024 and 2023 based on performance metrics and market adjustments.",
             details: {
               network_member_id: 123456789,
               history: [
