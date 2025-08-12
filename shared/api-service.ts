@@ -60,6 +60,7 @@ export interface NetworkMemberDetails {
 
 export interface TicketSection {
   title: string;
+  summary: string; // New summary field for collapsed view
   details: any; // Flexible structure based on section type
 }
 
