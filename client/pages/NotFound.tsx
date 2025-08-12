@@ -23,7 +23,9 @@ const NotFound = () => {
             <AlertCircle className="h-8 w-8 text-glg-red" />
           </div>
           <h1 className="text-4xl font-bold text-glg-900 mb-2">404</h1>
-          <h2 className="text-xl font-semibold text-glg-700 mb-2">Page Not Found</h2>
+          <h2 className="text-xl font-semibold text-glg-700 mb-2">
+            Page Not Found
+          </h2>
           <p className="text-glg-600 mb-6">
             The page you're looking for doesn't exist or has been moved.
           </p>
@@ -44,9 +46,7 @@ const NotFound = () => {
               Go Back
             </Button>
           </div>
-          <p className="text-xs text-glg-500 mt-4">
-            Path: {location.pathname}
-          </p>
+          <p className="text-xs text-glg-500 mt-4">Path: {location.pathname}</p>
         </CardContent>
       </Card>
     </div>

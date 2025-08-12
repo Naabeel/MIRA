@@ -79,7 +79,7 @@ export interface AutoResponseRequest {
   ticket_description: string;
   category: string;
   catalyst: string;
-  ticket_details: TicketDetailsResponse['ticket_details'];
+  ticket_details: TicketDetailsResponse["ticket_details"];
 }
 
 export interface AutoResponseResponse {
@@ -88,9 +88,9 @@ export interface AutoResponseResponse {
 
 // API Service Class
 class ApiService {
-  private baseUrl: string = '';
+  private baseUrl: string = "";
 
-  constructor(baseUrl: string = '') {
+  constructor(baseUrl: string = "") {
     this.baseUrl = baseUrl;
   }
 
@@ -103,7 +103,7 @@ class ApiService {
       // Mock data for now - structured exactly like the API response
       return this.getMockClassificationData();
     } catch (error) {
-      console.error('Error fetching ticket classification:', error);
+      console.error("Error fetching ticket classification:", error);
       throw error;
     }
   }
@@ -117,12 +117,14 @@ class ApiService {
       // Mock data for now - structured exactly like the API response
       return this.getMockTicketDetails(ticketId);
     } catch (error) {
-      console.error('Error fetching ticket details:', error);
+      console.error("Error fetching ticket details:", error);
       throw error;
     }
   }
 
-  async generateAutoResponse(request: AutoResponseRequest): Promise<AutoResponseResponse> {
+  async generateAutoResponse(
+    request: AutoResponseRequest,
+  ): Promise<AutoResponseResponse> {
     try {
       // This will be replaced with actual API call when backend is ready
       // const response = await fetch('/generate_auto_response', {
@@ -133,10 +135,10 @@ class ApiService {
       // return await response.json();
 
       // Mock data for now - simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 3000)); // 3 second delay
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
       return this.getMockAutoResponse(request);
     } catch (error) {
-      console.error('Error generating auto response:', error);
+      console.error("Error generating auto response:", error);
       throw error;
     }
   }
@@ -156,7 +158,8 @@ class ApiService {
                   id: "1234567890",
                   url: "https://example.com/ticket/1234567890.json",
                   Subject: "Rate increase negotiation for Q2 projects",
-                  Description: "Requesting rate adjustment based on experience and market conditions",
+                  Description:
+                    "Requesting rate adjustment based on experience and market conditions",
                   channel: "email",
                   from_address: "michael.rodriguez@glg.com",
                   created_at: "2024-01-14T11:15:00Z",
@@ -164,13 +167,14 @@ class ApiService {
                   priority: "high",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456789
+                  network_member_id: 123456789,
                 },
                 {
                   id: "1234567891",
                   url: "https://example.com/ticket/1234567891.json",
                   Subject: "Annual rate review discussion",
-                  Description: "Annual rate review based on performance metrics",
+                  Description:
+                    "Annual rate review based on performance metrics",
                   channel: "portal",
                   from_address: "sarah.chen@glg.com",
                   created_at: "2024-01-13T14:00:00Z",
@@ -178,13 +182,14 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456790
+                  network_member_id: 123456790,
                 },
                 {
                   id: "1234567892",
                   url: "https://example.com/ticket/1234567892.json",
                   Subject: "Specialist rate premium request",
-                  Description: "Request for specialist premium rate for niche expertise",
+                  Description:
+                    "Request for specialist premium rate for niche expertise",
                   channel: "email",
                   from_address: "emily.johnson@glg.com",
                   created_at: "2024-01-12T10:00:00Z",
@@ -192,13 +197,14 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456791
+                  network_member_id: 123456791,
                 },
                 {
                   id: "1234567893",
                   url: "https://example.com/ticket/1234567893.json",
                   Subject: "Consulting rate adjustment",
-                  Description: "Requesting adjustment to consulting hourly rate",
+                  Description:
+                    "Requesting adjustment to consulting hourly rate",
                   channel: "phone",
                   from_address: "david.kim@glg.com",
                   created_at: "2024-01-11T09:30:00Z",
@@ -206,9 +212,9 @@ class ApiService {
                   priority: "low",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456792
-                }
-              ]
+                  network_member_id: 123456792,
+                },
+              ],
             },
             {
               catalyst: "Reduction",
@@ -218,7 +224,8 @@ class ApiService {
                   id: "1234567894",
                   url: "https://example.com/ticket/1234567894.json",
                   Subject: "Rate reduction compliance issue",
-                  Description: "Compliance team requested rate reduction due to policy changes",
+                  Description:
+                    "Compliance team requested rate reduction due to policy changes",
                   channel: "internal",
                   from_address: "compliance@glg.com",
                   created_at: "2024-01-10T15:00:00Z",
@@ -226,11 +233,11 @@ class ApiService {
                   priority: "urgent",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456793
-                }
-              ]
-            }
-          ]
+                  network_member_id: 123456793,
+                },
+              ],
+            },
+          ],
         },
         {
           category: "Profile",
@@ -244,7 +251,8 @@ class ApiService {
                   id: "2234567890",
                   url: "https://example.com/ticket/2234567890.json",
                   Subject: "Update professional profile information",
-                  Description: "Need to update education and work experience on profile",
+                  Description:
+                    "Need to update education and work experience on profile",
                   channel: "email",
                   from_address: "sarah.chen@glg.com",
                   created_at: "2024-01-15T09:30:00Z",
@@ -252,13 +260,14 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456789
+                  network_member_id: 123456789,
                 },
                 {
                   id: "2234567891",
                   url: "https://example.com/ticket/2234567891.json",
                   Subject: "Add new certification to profile",
-                  Description: "Recently obtained PMP certification, need to add to profile",
+                  Description:
+                    "Recently obtained PMP certification, need to add to profile",
                   channel: "portal",
                   from_address: "michael.rodriguez@glg.com",
                   created_at: "2024-01-13T10:00:00Z",
@@ -266,13 +275,14 @@ class ApiService {
                   priority: "low",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456790
+                  network_member_id: 123456790,
                 },
                 {
                   id: "2234567892",
                   url: "https://example.com/ticket/2234567892.json",
                   Subject: "Contact information update",
-                  Description: "Changed phone number and address, need profile update",
+                  Description:
+                    "Changed phone number and address, need profile update",
                   channel: "email",
                   from_address: "emily.johnson@glg.com",
                   created_at: "2024-01-12T14:00:00Z",
@@ -280,13 +290,14 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456791
+                  network_member_id: 123456791,
                 },
                 {
                   id: "2234567893",
                   url: "https://example.com/ticket/2234567893.json",
                   Subject: "Profile photo update request",
-                  Description: "Need to update professional headshot on profile",
+                  Description:
+                    "Need to update professional headshot on profile",
                   channel: "portal",
                   from_address: "david.kim@glg.com",
                   created_at: "2024-01-11T09:00:00Z",
@@ -294,13 +305,14 @@ class ApiService {
                   priority: "low",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456792
+                  network_member_id: 123456792,
                 },
                 {
                   id: "2234567894",
                   url: "https://example.com/ticket/2234567894.json",
                   Subject: "Skills section enhancement",
-                  Description: "Add new technical skills acquired in recent training",
+                  Description:
+                    "Add new technical skills acquired in recent training",
                   channel: "email",
                   from_address: "sarah.chen@glg.com",
                   created_at: "2024-01-10T16:00:00Z",
@@ -308,7 +320,7 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456789
+                  network_member_id: 123456789,
                 },
                 {
                   id: "2234567895",
@@ -322,9 +334,9 @@ class ApiService {
                   priority: "low",
                   ticket_language: "en",
                   medium: "nmhome",
-                  network_member_id: 123456790
-                }
-              ]
+                  network_member_id: 123456790,
+                },
+              ],
             },
             {
               catalyst: "Verification",
@@ -334,7 +346,8 @@ class ApiService {
                   id: "2234567896",
                   url: "https://example.com/ticket/2234567896.json",
                   Subject: "ID verification documentation required",
-                  Description: "Additional identity verification documents needed for compliance",
+                  Description:
+                    "Additional identity verification documents needed for compliance",
                   channel: "internal",
                   from_address: "compliance@glg.com",
                   created_at: "2024-01-10T14:20:00Z",
@@ -342,7 +355,7 @@ class ApiService {
                   priority: "high",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456793
+                  network_member_id: 123456793,
                 },
                 {
                   id: "2234567897",
@@ -356,11 +369,11 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456794
-                }
-              ]
-            }
-          ]
+                  network_member_id: 123456794,
+                },
+              ],
+            },
+          ],
         },
         {
           category: "Projects",
@@ -374,7 +387,8 @@ class ApiService {
                   id: "3234567890",
                   url: "https://example.com/ticket/3234567890.json",
                   Subject: "Project assignment - Healthcare Analytics",
-                  Description: "New project assignment in healthcare analytics domain",
+                  Description:
+                    "New project assignment in healthcare analytics domain",
                   channel: "email",
                   from_address: "projects@glg.com",
                   created_at: "2024-01-16T16:00:00Z",
@@ -382,13 +396,14 @@ class ApiService {
                   priority: "urgent",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456789
+                  network_member_id: 123456789,
                 },
                 {
                   id: "3234567891",
                   url: "https://example.com/ticket/3234567891.json",
                   Subject: "FinTech consultation project",
-                  Description: "Financial technology consulting project for startup",
+                  Description:
+                    "Financial technology consulting project for startup",
                   channel: "portal",
                   from_address: "projects@glg.com",
                   created_at: "2024-01-15T12:00:00Z",
@@ -396,13 +411,14 @@ class ApiService {
                   priority: "high",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456790
+                  network_member_id: 123456790,
                 },
                 {
                   id: "3234567892",
                   url: "https://example.com/ticket/3234567892.json",
                   Subject: "Manufacturing efficiency study",
-                  Description: "Project to analyze manufacturing process improvements",
+                  Description:
+                    "Project to analyze manufacturing process improvements",
                   channel: "email",
                   from_address: "projects@glg.com",
                   created_at: "2024-01-14T08:30:00Z",
@@ -410,13 +426,13 @@ class ApiService {
                   priority: "medium",
                   ticket_language: "en",
                   medium: "internal",
-                  network_member_id: 123456791
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                  network_member_id: 123456791,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -442,7 +458,8 @@ class ApiService {
           CONSULTATION_RATE: "350.0000",
           MIN_PROJECT_AMOUNT: "5000",
           RECOMMENDED_CONSULTATION_RATE: "300.0000",
-          BIOGRAPHY: "Sarah Chen is a seasoned healthcare consultant with over 8 years of experience in digital transformation initiatives. She currently serves as Senior Consultant at GLG, specializing in healthcare analytics and process optimization. Previously, Sarah held positions at McKinsey & Company and worked extensively with Fortune 500 healthcare organizations.",
+          BIOGRAPHY:
+            "Sarah Chen is a seasoned healthcare consultant with over 8 years of experience in digital transformation initiatives. She currently serves as Senior Consultant at GLG, specializing in healthcare analytics and process optimization. Previously, Sarah held positions at McKinsey & Company and worked extensively with Fortune 500 healthcare organizations.",
           COUNCIL_NAME: "Healthcare & Life Sciences",
           PRACTICE_AREA: "Healthcare Analytics",
           IS_DNC: "false",
@@ -454,18 +471,20 @@ class ApiService {
           NPI_NUMBER: "1234567890",
           LINKED_IN_PROFILE_URL: "https://linkedin.com/in/sarahchen",
           PUBLIC_OFFICIAL_IND: "false",
-          PERSONA_VERIFICATION_DATE: "2024-01-01"
+          PERSONA_VERIFICATION_DATE: "2024-01-01",
         },
         sections: [
           {
             title: "Work History",
-            summary: "Current Senior Healthcare Consultant at GLG with 8+ years experience. Previously at McKinsey & Company and Deloitte Consulting specializing in healthcare analytics and digital transformation.",
+            summary:
+              "Current Senior Healthcare Consultant at GLG with 8+ years experience. Previously at McKinsey & Company and Deloitte Consulting specializing in healthcare analytics and digital transformation.",
             details: {
               network_member_id: 123456789,
               history: [
                 {
                   job_title: "Senior Healthcare Consultant",
-                  description: "Leading digital transformation initiatives for healthcare providers",
+                  description:
+                    "Leading digital transformation initiatives for healthcare providers",
                   company_name: "GLG",
                   current_ind: true,
                   start_month: "3",
@@ -473,7 +492,7 @@ class ApiService {
                   start_year: "2022",
                   end_year: null,
                   affiliation: "Full-time Employee",
-                  company_type: "private"
+                  company_type: "private",
                 },
                 {
                   job_title: "Management Consultant",
@@ -485,7 +504,7 @@ class ApiService {
                   start_year: "2019",
                   end_year: "2022",
                   affiliation: "Full-time Employee",
-                  company_type: "private"
+                  company_type: "private",
                 },
                 {
                   job_title: "Business Analyst",
@@ -497,14 +516,15 @@ class ApiService {
                   start_year: "2017",
                   end_year: "2019",
                   affiliation: "Full-time Employee",
-                  company_type: "private"
-                }
-              ]
-            }
+                  company_type: "private",
+                },
+              ],
+            },
           },
           {
             title: "Fee History",
-            summary: "Current consultation rate: $365/hr (approved). Recent rate increases in 2024 and 2023 based on performance metrics and market adjustments.",
+            summary:
+              "Current consultation rate: $365/hr (approved). Recent rate increases in 2024 and 2023 based on performance metrics and market adjustments.",
             details: {
               network_member_id: 123456789,
               history: [
@@ -516,7 +536,7 @@ class ApiService {
                   recommended_rate: 350,
                   renegotiate_rate: 365,
                   status: "approved",
-                  reason: "Performance-based increase for Q2 2024"
+                  reason: "Performance-based increase for Q2 2024",
                 },
                 {
                   create_date: "2023-06-01",
@@ -526,7 +546,7 @@ class ApiService {
                   recommended_rate: 325,
                   renegotiate_rate: 340,
                   status: "approved",
-                  reason: "Annual rate review adjustment"
+                  reason: "Annual rate review adjustment",
                 },
                 {
                   create_date: "2022-12-01",
@@ -536,14 +556,15 @@ class ApiService {
                   recommended_rate: 300,
                   renegotiate_rate: 315,
                   status: "approved",
-                  reason: "Initial rate setting for specialized expertise"
-                }
-              ]
-            }
+                  reason: "Initial rate setting for specialized expertise",
+                },
+              ],
+            },
           },
           {
             title: "Project History",
-            summary: "Active in Healthcare & Life Sciences council. Recent projects include digital transformation strategy ($350/hr) and telemedicine implementation assessment. High performance with 120+ minute consultations.",
+            summary:
+              "Active in Healthcare & Life Sciences council. Recent projects include digital transformation strategy ($350/hr) and telemedicine implementation assessment. High performance with 120+ minute consultations.",
             details: {
               network_member_id: 123456789,
               history: [
@@ -553,8 +574,10 @@ class ApiService {
                   project_meeting_id: 134534523,
                   consultation_participant_id: 1234,
                   title: "Healthcare Digital Transformation Strategy",
-                  description: "Strategic consulting for major healthcare provider's digital transformation initiative",
-                  rm_headline: "Digital Health Innovation for Regional Healthcare System",
+                  description:
+                    "Strategic consulting for major healthcare provider's digital transformation initiative",
+                  rm_headline:
+                    "Digital Health Innovation for Regional Healthcare System",
                   council_name: "Healthcare & Life Sciences",
                   zone_region_name: "North America",
                   primary_rm: "Jennifer Walsh",
@@ -571,7 +594,7 @@ class ApiService {
                   first_stc_date: "2024-01-04",
                   first_decline_date: null,
                   first_scheduled_date: "2024-01-08",
-                  first_call_occurred_date: "2024-01-08"
+                  first_call_occurred_date: "2024-01-08",
                 },
                 {
                   project_create_date: "2023-11-15",
@@ -579,7 +602,8 @@ class ApiService {
                   project_meeting_id: 134534524,
                   consultation_participant_id: 1235,
                   title: "Telemedicine Implementation Assessment",
-                  description: "Evaluation of telemedicine platform implementation for mid-size healthcare network",
+                  description:
+                    "Evaluation of telemedicine platform implementation for mid-size healthcare network",
                   rm_headline: "Telemedicine Strategy and Implementation",
                   council_name: "Healthcare & Life Sciences",
                   zone_region_name: "North America",
@@ -597,42 +621,52 @@ class ApiService {
                   first_stc_date: "2023-11-18",
                   first_decline_date: null,
                   first_scheduled_date: "2023-11-22",
-                  first_call_occurred_date: "2023-11-22"
-                }
-              ]
-            }
+                  first_call_occurred_date: "2023-11-22",
+                },
+              ],
+            },
           },
           {
             title: "TC History",
-            summary: "Current terms period: 2024-01-01 to 2024-12-31. Next renewal: 2025-01-01. Consistent annual renewals since joining in 2022.",
+            summary:
+              "Current terms period: 2024-01-01 to 2024-12-31. Next renewal: 2025-01-01. Consistent annual renewals since joining in 2022.",
             details: {
               network_member_id: 123456789,
               history: [
                 {
                   tc_start_date: "2024-01-01",
                   tc_end_date: "2024-12-31",
-                  next_tc_start_date: "2025-01-01"
+                  next_tc_start_date: "2025-01-01",
                 },
                 {
                   tc_start_date: "2023-01-01",
                   tc_end_date: "2023-12-31",
-                  next_tc_start_date: "2024-01-01"
+                  next_tc_start_date: "2024-01-01",
                 },
                 {
                   tc_start_date: "2022-03-15",
                   tc_end_date: "2022-12-31",
-                  next_tc_start_date: "2023-01-01"
-                }
-              ]
-            }
-          }
-        ]
-      }
+                  next_tc_start_date: "2023-01-01",
+                },
+              ],
+            },
+          },
+        ],
+      },
     };
   }
 
-  private getMockAutoResponse(request: AutoResponseRequest): AutoResponseResponse {
-    const { ticket_id, ticket_subject, ticket_description, category, catalyst, ticket_details } = request;
+  private getMockAutoResponse(
+    request: AutoResponseRequest,
+  ): AutoResponseResponse {
+    const {
+      ticket_id,
+      ticket_subject,
+      ticket_description,
+      category,
+      catalyst,
+      ticket_details,
+    } = request;
     const member = ticket_details.network_member_details;
 
     // Generate realistic HTML email content based on request data
@@ -655,7 +689,9 @@ class ApiService {
           </div>
         </div>
 
-        ${category === "Rate" ? `
+        ${
+          category === "Rate"
+            ? `
         <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
           <h3 style="color: #1E3A8A; margin: 0 0 15px 0; font-size: 18px;">Rate Information</h3>
           <ul style="color: #374151; line-height: 1.6; margin: 0; padding-left: 20px;">
@@ -665,9 +701,13 @@ class ApiService {
             <li>Practice area: ${member.PRACTICE_AREA}</li>
           </ul>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${category === "Profile" ? `
+        ${
+          category === "Profile"
+            ? `
         <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
           <h3 style="color: #1E3A8A; margin: 0 0 15px 0; font-size: 18px;">Profile Update</h3>
           <p style="color: #374151; line-height: 1.6; margin: 0;">
@@ -675,7 +715,9 @@ class ApiService {
             and update your profile accordingly. You should see the changes reflected within 24-48 hours.
           </p>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
 
         <div style="margin-bottom: 25px;">
           <p style="color: #374151; line-height: 1.6; margin: 0 0 15px 0;">
@@ -707,7 +749,7 @@ class ApiService {
     `;
 
     return {
-      generated_auto_response: htmlContent.trim()
+      generated_auto_response: htmlContent.trim(),
     };
   }
 }

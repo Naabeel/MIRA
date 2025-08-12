@@ -8,7 +8,7 @@
    * tailwind.config.ts expects the following color variables to be expressed as HSL values.
    * A different format will require also updating the theme in tailwind.config.ts.
   */
-      :root {
+  :root {
     --background: 255 255 255;
     --foreground: 15 23 42;
 
@@ -70,7 +70,7 @@
     --glg-gray-900: 15 23 42;
   }
 
-      .dark {
+  .dark {
     --background: 30 41 59;
     --foreground: 248 250 252;
 

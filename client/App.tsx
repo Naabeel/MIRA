@@ -21,7 +21,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-                <Routes>
+        <Routes>
           <Route path="/" element={<HierarchicalTicketBrowser />} />
           <Route path="/unified" element={<UnifiedDashboard />} />
           <Route path="/legacy/dashboard" element={<Dashboard />} />
