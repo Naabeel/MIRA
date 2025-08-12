@@ -59,10 +59,11 @@ const channelIcons = {
 };
 
 export default function HierarchicalTicketBrowser() {
+  const { toast } = useToast();
   const [navigationState, setNavigationState] = useState<NavigationState>({
     level: "categories",
   });
-  
+
   const [classificationData, setClassificationData] = useState<TicketClassificationResponse | null>(null);
   const [ticketDetails, setTicketDetails] = useState<TicketDetailsResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -70,6 +71,11 @@ export default function HierarchicalTicketBrowser() {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [showTicketsModal, setShowTicketsModal] = useState(false);
   const [selectedCatalystForModal, setSelectedCatalystForModal] = useState<string | null>(null);
+
+  // Auto-response generation state
+  const [generatingResponse, setGeneratingResponse] = useState(false);
+  const [showResponseModal, setShowResponseModal] = useState(false);
+  const [generatedResponse, setGeneratedResponse] = useState<string>("");
 
   // Load initial classification data
   useEffect(() => {
