@@ -363,7 +363,7 @@ export default function HierarchicalTicketBrowser() {
                             <h3 className="text-lg font-semibold text-glg-900 mb-2">
                               {ticket.Subject}
                             </h3>
-                            <p className="text-glg-600 text-sm mb-3 line-clamp-2">
+                            <p className="text-glg-600 text-sm mb-3 overflow-hidden text-ellipsis">
                               {ticket.Description}
                             </p>
                           </div>
