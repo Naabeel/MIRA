@@ -30,8 +30,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 import { CollapsibleSection } from "@/components/CollapsibleSection";
-import { apiService, type TicketClassificationResponse, type TicketDetailsResponse } from "@shared/api-service";
+import { apiService, type TicketClassificationResponse, type TicketDetailsResponse, type AutoResponseRequest } from "@shared/api-service";
 import { cn } from "@/lib/utils";
 
 type ViewLevel = "categories" | "catalysts" | "tickets" | "details";
