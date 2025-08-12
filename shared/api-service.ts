@@ -111,7 +111,7 @@ class ApiService {
   async getTicketDetails(ticketId: string): Promise<TicketDetailsResponse> {
     try {
       // This will be replaced with actual API call when backend is ready
-      // const response = await fetch(`${this.baseUrl}/ticket_details/${ticketId}`);
+      // const response = await fetch(`/ticket_details/${ticketId}`);
       // return await response.json();
 
       // Mock data for now - structured exactly like the API response
